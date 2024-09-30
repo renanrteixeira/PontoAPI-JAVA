@@ -3,7 +3,7 @@ package com.controle.ponto.services.user;
 import com.controle.ponto.config.HashPassword;
 import com.controle.ponto.domain.dto.user.UserRequestDTO;
 import com.controle.ponto.domain.user.User;
-import com.controle.ponto.repository.user.UserRepository;
+import com.controle.ponto.repositories.user.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

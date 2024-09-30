@@ -1,4 +1,4 @@
-package com.controle.ponto.repository.user;
+package com.controle.ponto.repositories.user;
 
 import com.controle.ponto.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
