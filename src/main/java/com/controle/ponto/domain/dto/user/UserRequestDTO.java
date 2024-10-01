@@ -1,19 +1,27 @@
 package com.controle.ponto.domain.dto.user;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-public record UserRequestDTO(
-        String id,
+@AllArgsConstructor
+@Getter
+@Setter
+public class UserRequestDTO {
+
+        private String id;
         @NotNull
-        String name,
+        private String name;
         @NotNull
-        String email,
+        private String email;
         @NotNull
-        String username,
+        private String username;
         @NotNull
-        String password,
+        private String password;
         @NotNull
-        char admin,
+        private char admin;
         @NotNull
-        char status) {
+        private char status;
+
 }

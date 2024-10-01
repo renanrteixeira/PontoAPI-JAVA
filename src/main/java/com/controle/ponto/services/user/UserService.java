@@ -41,14 +41,14 @@ public class UserService {
 
     public User postUser(UserRequestDTO data){
 
-        Optional<User> userFound = Optional.ofNullable(repository.findByUsername(data.username()));
+        Optional<User> userFound = Optional.ofNullable(repository.findByUsername(data.getUsername()));
 
         if (userFound.isPresent()){
             return new User(data);
         }
 
         User user_ = new User(data);
-        String password = EncodePassword(data.password());
+        String password = EncodePassword(data.getPassword());
         user_.setPassword(password);
         repository.save(user_);
 
@@ -57,18 +57,19 @@ public class UserService {
 
     @Transactional
     public User putUser(UserRequestDTO data){
-        Optional<User> user = repository.findById(data.id());
+        Optional<User> user = repository.findById(data.getId());
         if (!user.isPresent()){
+            data.setId(null);
             return null;
         }
 
         User newUser = user.get();
-        newUser.setName(data.name());
-        newUser.setEmail(data.email());
-        newUser.setStatus(data.status());
-        String password = EncodePassword(data.password());
+        newUser.setName(data.getName());
+        newUser.setEmail(data.getEmail());
+        newUser.setStatus(data.getStatus());
+        String password = EncodePassword(data.getPassword());
         newUser.setPassword(password);
-        newUser.setAdmin(data.admin());
+        newUser.setAdmin(data.getAdmin());
 
         return newUser;
     }

@@ -29,12 +29,12 @@ public class User {
     private char status;
 
     public  User(UserRequestDTO userRequest){
-        this.name = userRequest.name();
-        this.email = userRequest.email();
-        this.username = userRequest.username();
-        this.password = userRequest.password();
-        this.admin = userRequest.admin();
-        this.status = userRequest.status();
+        this.name = userRequest.getName();
+        this.email = userRequest.getEmail();
+        this.username = userRequest.getUsername();
+        this.password = userRequest.getPassword();
+        this.admin = userRequest.getAdmin();
+        this.status = userRequest.getStatus();
     }
 
 }

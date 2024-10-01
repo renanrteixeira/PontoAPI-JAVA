@@ -1,7 +1,8 @@
 package com.controle.ponto.exceptions.rest;
 
 import com.controle.ponto.domain.dto.message.MessageResponseDTO;
-import com.controle.ponto.exceptions.CustomException;
+import com.controle.ponto.exceptions.BadRequestCustomException;
+import com.controle.ponto.exceptions.NotFoundCustomException;
 import com.controle.ponto.exceptions.user.UserNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,10 +31,17 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
-    @ExceptionHandler(CustomException.class)
-    private ResponseEntity userCustomhandler(CustomException ex){
+    @ExceptionHandler(BadRequestCustomException.class)
+    private ResponseEntity badRequestCustomhandler(BadRequestCustomException ex){
         MessageResponseDTO message = new MessageResponseDTO(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), ex.getMessage());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+    }
+
+    @ExceptionHandler(NotFoundCustomException.class)
+    private ResponseEntity notFoundCustomHandler(NotFoundCustomException ex){
+        MessageResponseDTO message = new MessageResponseDTO(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase(), ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 }

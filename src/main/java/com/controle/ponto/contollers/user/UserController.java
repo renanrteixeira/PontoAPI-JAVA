@@ -2,7 +2,7 @@ package com.controle.ponto.contollers.user;
 
 import com.controle.ponto.domain.dto.user.UserRequestDTO;
 import com.controle.ponto.domain.user.User;
-import com.controle.ponto.exceptions.CustomException;
+import com.controle.ponto.exceptions.BadRequestCustomException;
 import com.controle.ponto.exceptions.user.UserNotFoundException;
 import com.controle.ponto.services.user.UserService;
 import jakarta.validation.Valid;
@@ -39,9 +39,9 @@ public class UserController {
     public ResponseEntity postUser(@RequestBody @Valid UserRequestDTO data){
         User user = service.postUser(data);
         if (user.getId() == null){
-            throw new CustomException("Usuário já cadastrado.");
+            throw new BadRequestCustomException("Usuário já cadastrado.");
         }
-        URI location = URI.create("/users/" + user.getId());
+        URI location = URI.create("/user/" + user.getId());
 
         return ResponseEntity.created(location).body(user);
     }
