@@ -21,6 +21,17 @@ public class UserService {
         return repository.findAll();
     }
 
+    public User findById(String id){
+        Optional<User> user = repository.findById(id);
+        if (!user.isPresent()){
+            return null;
+        }
+
+        User userfound = user.get();
+
+        return userfound;
+    }
+
     private String EncodePassword(String password){
         HashPassword hashPassword = new HashPassword();
         String newPassword = hashPassword.EncodePassword(password);
@@ -47,19 +58,19 @@ public class UserService {
     @Transactional
     public User putUser(UserRequestDTO data){
         Optional<User> user = repository.findById(data.id());
-        if (user.isPresent()){
-            User newUser = user.get();
-            newUser.setName(data.name());
-            newUser.setEmail(data.email());
-            newUser.setStatus(data.status());
-            String password = EncodePassword(data.password());
-            newUser.setPassword(password);
-            newUser.setAdmin(data.admin());
-
-            return newUser;
+        if (!user.isPresent()){
+            return null;
         }
 
-        return new User();
+        User newUser = user.get();
+        newUser.setName(data.name());
+        newUser.setEmail(data.email());
+        newUser.setStatus(data.status());
+        String password = EncodePassword(data.password());
+        newUser.setPassword(password);
+        newUser.setAdmin(data.admin());
+
+        return newUser;
     }
 
 }

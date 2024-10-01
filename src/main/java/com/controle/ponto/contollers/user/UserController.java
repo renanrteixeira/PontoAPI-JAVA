@@ -1,12 +1,12 @@
 package com.controle.ponto.contollers.user;
 
-import com.controle.ponto.domain.dto.message.MessageResponseDTO;
 import com.controle.ponto.domain.dto.user.UserRequestDTO;
 import com.controle.ponto.domain.user.User;
+import com.controle.ponto.exceptions.CustomException;
+import com.controle.ponto.exceptions.user.UserNotFoundException;
 import com.controle.ponto.services.user.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,12 +26,20 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity getById(@PathVariable String id){
+        var user = service.findById(id);
+        if (user == null){
+            throw new UserNotFoundException();
+        }
+        return ResponseEntity.ok(user);
+    }
+
     @PostMapping
     public ResponseEntity postUser(@RequestBody @Valid UserRequestDTO data){
         User user = service.postUser(data);
         if (user.getId() == null){
-            MessageResponseDTO message = new MessageResponseDTO(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), "Usuário já cadastrado.");
-            return ResponseEntity.badRequest().body(message);
+            throw new CustomException("Usuário já cadastrado.");
         }
         URI location = URI.create("/users/" + user.getId());
 
@@ -42,8 +50,7 @@ public class UserController {
     public ResponseEntity putUser(@RequestBody @Valid UserRequestDTO data){
         User user = service.putUser(data);
         if (user == null){
-            MessageResponseDTO message = new MessageResponseDTO(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), "Usuário não cadastrado.");
-            return ResponseEntity.badRequest().body(message);
+            throw new UserNotFoundException();
         }
 
         return ResponseEntity.accepted().body(user);
