@@ -1,16 +1,16 @@
-package com.controle.ponto.domain;
+package com.controle.ponto.domain.enumerator;
 
+import lombok.Getter;
+
+@Getter
 public enum UserStatus {
     Ativo('A'),
     Inativo('I');
 
-    private char status;
+    private final char status;
 
     UserStatus(char status){
         this.status = status;
     }
 
-    public char getStatus(){
-        return status;
-    }
 }

@@ -19,30 +19,30 @@ public class RoleController {
     RoleService service;
 
     @GetMapping
-    public ResponseEntity getAllRules(){
-        var roles = service.getAllRoles();
+    public ResponseEntity findAll(){
+        var roles = service.findAll();
 
         return ResponseEntity.ok(roles);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getById(@PathVariable String id){
-        var role = service.getById(id);
+    public ResponseEntity findById(@PathVariable String id){
+        var role = service.findById(id);
 
         return ResponseEntity.ok(role);
     }
 
     @PostMapping
-    public ResponseEntity postRole(@RequestBody @Valid RoleRequestDTO data){
-        var role = service.postRole(data);
+    public ResponseEntity post(@RequestBody @Valid RoleRequestDTO data){
+        var role = service.post(data);
         URI location = URI.create("/role/" + role.getId());
 
         return ResponseEntity.created(location).body(role);
     }
 
     @PutMapping
-    public ResponseEntity putRole(@RequestBody @Valid RoleRequestDTO data){
-        var role = service.putRole(data);
+    public ResponseEntity put(@RequestBody @Valid RoleRequestDTO data){
+        var role = service.put(data);
 
         return ResponseEntity.accepted().body(role);
     }

@@ -1,6 +1,6 @@
 package com.controle.ponto.domain.user;
 
-import com.controle.ponto.domain.UserStatus;
+import com.controle.ponto.domain.enumerator.UserStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

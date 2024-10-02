@@ -18,11 +18,11 @@ public class RoleService {
     @Autowired
     RoleRepository repository;
 
-    public List<Role> getAllRoles(){
+    public List<Role> findAll(){
         return repository.findAll();
     }
 
-    public Role getById(String id){
+    public Role findById(String id){
         Optional<Role> role = repository.findById(id);
         if (!role.isPresent()){
             throw new NotFoundCustomException("Função não encontrada!");
@@ -32,7 +32,7 @@ public class RoleService {
         return rolefound;
     }
 
-    public Role postRole(RoleRequestDTO data){
+    public Role post(RoleRequestDTO data){
         Optional<Role> role = Optional.ofNullable(repository.findByName(data.getName()));
         if (role.isPresent()){
             throw new BadRequestCustomException("Função já cadastrada.");
@@ -45,7 +45,7 @@ public class RoleService {
     }
 
     @Transactional
-    public Role putRole(RoleRequestDTO data){
+    public Role put(RoleRequestDTO data){
         Optional<Role> roleFound = repository.findById(data.getId());
         if(!roleFound.isPresent()){
             throw new NotFoundCustomException("Função não encontrada!");
