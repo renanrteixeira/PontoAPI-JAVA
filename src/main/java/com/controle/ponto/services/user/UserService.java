@@ -41,7 +41,7 @@ public class UserService {
         return newPassword;
     }
 
-    public User postUser(UserRequestDTO data){
+    public User post(UserRequestDTO data){
 
         Optional<User> userFound = Optional.ofNullable(repository.findByUsername(data.getUsername()));
 
@@ -58,7 +58,7 @@ public class UserService {
     }
 
     @Transactional
-    public User putUser(UserRequestDTO data){
+    public User put(UserRequestDTO data){
         Optional<User> user = repository.findById(data.getId());
         if (!user.isPresent()){
             throw new UserNotFoundException();

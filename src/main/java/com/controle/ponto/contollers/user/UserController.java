@@ -2,8 +2,6 @@ package com.controle.ponto.contollers.user;
 
 import com.controle.ponto.domain.dto.user.UserRequestDTO;
 import com.controle.ponto.domain.user.User;
-import com.controle.ponto.exceptions.BadRequestCustomException;
-import com.controle.ponto.exceptions.user.UserNotFoundException;
 import com.controle.ponto.services.user.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,30 +18,30 @@ public class UserController {
     private UserService service;
 
     @GetMapping
-    public ResponseEntity getAllUsers(){
+    public ResponseEntity findAll(){
         var users = service.findAll();
 
         return ResponseEntity.ok(users);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getById(@PathVariable String id){
+    public ResponseEntity findById(@PathVariable String id){
         var user = service.findById(id);
 
         return ResponseEntity.ok(user);
     }
 
     @PostMapping
-    public ResponseEntity postUser(@RequestBody @Valid UserRequestDTO data){
-        User user = service.postUser(data);
+    public ResponseEntity post(@RequestBody @Valid UserRequestDTO data){
+        User user = service.post(data);
         URI location = URI.create("/user/" + user.getId());
 
         return ResponseEntity.created(location).body(user);
     }
 
     @PutMapping
-    public ResponseEntity putUser(@RequestBody @Valid UserRequestDTO data){
-        User user = service.putUser(data);
+    public ResponseEntity put(@RequestBody @Valid UserRequestDTO data){
+        User user = service.put(data);
 
         return ResponseEntity.accepted().body(user);
     }
