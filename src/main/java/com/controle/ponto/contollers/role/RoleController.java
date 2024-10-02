@@ -29,19 +29,12 @@ public class RoleController {
     public ResponseEntity getById(@PathVariable String id){
         var role = service.getById(id);
 
-        if (role == null){
-            throw new NotFoundCustomException("Função não encontrada!");
-        }
-
         return ResponseEntity.ok(role);
     }
 
     @PostMapping
     public ResponseEntity postRole(@RequestBody @Valid RoleRequestDTO data){
         var role = service.postRole(data);
-        if (role.getId() == null){
-            throw new BadRequestCustomException("Função já cadastrada.");
-        }
         URI location = URI.create("/role/" + role.getId());
 
         return ResponseEntity.created(location).body(role);
@@ -50,9 +43,6 @@ public class RoleController {
     @PutMapping
     public ResponseEntity putRole(@RequestBody @Valid RoleRequestDTO data){
         var role = service.putRole(data);
-        if (role == null){
-            throw new NotFoundCustomException("Função não encontrada!");
-        }
 
         return ResponseEntity.accepted().body(role);
     }

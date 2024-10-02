@@ -29,18 +29,13 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity getById(@PathVariable String id){
         var user = service.findById(id);
-        if (user == null){
-            throw new UserNotFoundException();
-        }
+
         return ResponseEntity.ok(user);
     }
 
     @PostMapping
     public ResponseEntity postUser(@RequestBody @Valid UserRequestDTO data){
         User user = service.postUser(data);
-        if (user.getId() == null){
-            throw new BadRequestCustomException("Usuário já cadastrado.");
-        }
         URI location = URI.create("/user/" + user.getId());
 
         return ResponseEntity.created(location).body(user);
@@ -49,9 +44,6 @@ public class UserController {
     @PutMapping
     public ResponseEntity putUser(@RequestBody @Valid UserRequestDTO data){
         User user = service.putUser(data);
-        if (user == null){
-            throw new UserNotFoundException();
-        }
 
         return ResponseEntity.accepted().body(user);
     }
