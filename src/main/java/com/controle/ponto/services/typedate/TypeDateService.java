@@ -27,7 +27,6 @@ public class TypeDateService {
     public TypeDate findById(String id){
         Optional<TypeDate> typedate = repository.findById(id);
         if (!typedate.isPresent()){
-            throw new NotFoundCustomException("Tipo de data não encontrada!");
         }
         TypeDate typeFound = typedate.get();
 
@@ -48,7 +47,7 @@ public class TypeDateService {
     @Transactional
     public TypeDate put(TypeDateRequestDTO data){
         Optional<TypeDate> typeDate = repository.findById(data.getId());
-        if (typeDate.isPresent()){
+        if (!typeDate.isPresent()){
             throw new NotFoundCustomException("Tipo de data não encontrada!");
         }
         TypeDate newTypeDate = typeDate.get();
