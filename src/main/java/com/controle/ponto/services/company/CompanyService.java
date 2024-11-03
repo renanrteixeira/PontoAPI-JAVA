@@ -2,6 +2,7 @@ package com.controle.ponto.services.company;
 
 import com.controle.ponto.domain.company.Company;
 import com.controle.ponto.domain.dto.company.CompanyRequestDTO;
+import com.controle.ponto.domain.dto.company.CompanyResponseDTO;
 import com.controle.ponto.exceptions.BadRequestCustomException;
 import com.controle.ponto.exceptions.NotFoundCustomException;
 import com.controle.ponto.repositories.company.CompanyRepository;
@@ -9,6 +10,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,13 +20,19 @@ public class CompanyService {
     @Autowired
     CompanyRepository repository;
 
-    public List<Company> findAll(){
+    public List<CompanyResponseDTO> findAll(){
         var companies = repository.findAll();
 
-        return companies;
+        List<CompanyResponseDTO> companyList = new ArrayList<>();
+
+        for (Company company : companies){
+            CompanyResponseDTO companyDTO = new CompanyResponseDTO(company);
+            companyList.add(companyDTO);
+        }
+        return companyList;
     }
 
-    public Company findById(String id){
+    public CompanyResponseDTO findById(String id){
         Optional<Company> company = repository.findById(id);
 
         if (!company.isPresent()){
@@ -33,10 +41,10 @@ public class CompanyService {
 
         Company foundCompany = company.get();
 
-        return foundCompany;
+        return new CompanyResponseDTO(foundCompany);
     }
 
-    public Company post(CompanyRequestDTO data){
+    public CompanyResponseDTO post(CompanyRequestDTO data){
         Optional<Company> company = Optional.ofNullable(repository.findByName(data.getName()));
         if (company.isPresent()){
             throw new BadRequestCustomException("Empresa ja cadastrada!");
@@ -45,11 +53,11 @@ public class CompanyService {
         Company newCompany = new Company(data);
         repository.save(newCompany);
 
-        return newCompany;
+        return new CompanyResponseDTO(newCompany);
     }
 
     @Transactional
-    public Company put(CompanyRequestDTO data){
+    public CompanyResponseDTO put(CompanyRequestDTO data){
         Optional<Company> company = repository.findById(data.getId());
         if (!company.isPresent()){
             throw new NotFoundCustomException("Empresa não encontrada!");
@@ -60,6 +68,6 @@ public class CompanyService {
         foundCompany.setAddress(data.getAddress());
         foundCompany.setTelephone(data.getTelephone());
 
-        return foundCompany;
+        return new CompanyResponseDTO(foundCompany);
     }
 }

@@ -33,7 +33,7 @@ public class CompanyController {
 
     @PostMapping
     public ResponseEntity post(@RequestBody @Valid CompanyRequestDTO data){
-        Company company = service.post(data);
+        var company = service.post(data);
 
         URI location = URI.create("/role/" + company.getId());
 
@@ -41,7 +41,7 @@ public class CompanyController {
     }
 
     public ResponseEntity put(@RequestBody @Valid CompanyRequestDTO data){
-        Company company = service.put(data);
+        var company = service.put(data);
 
         return ResponseEntity.accepted().body(company);
     }
