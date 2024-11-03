@@ -42,10 +42,7 @@ public class EmployeeService {
     }
 
     public EmployeeResponseDTO findById(String id){
-        Optional<Employee> employee = employeeRepository.findById(id);
-        if (!employee.isPresent()) {
-            throw new NotFoundCustomException("Funcionário não encontrado!");
-        }
+        Optional<Employee> employee = getOptionalEmployeeFindById(id);
         Employee foundEmployee = employee.get();
 
         return  new EmployeeResponseDTO(foundEmployee);
@@ -53,18 +50,9 @@ public class EmployeeService {
     }
 
     public EmployeeResponseDTO post(EmployeeRequestDTO data){
-        Optional<Employee> employee = Optional.ofNullable(employeeRepository.findByName(data.getName()));
-        if (employee.isPresent()){
-            throw new BadRequestCustomException("Funcionário já cadatrado!");
-        }
-        Optional<Role> role = roleRepository.findById(data.getRoleId());
-        if (!role.isPresent()){
-            throw new NotFoundCustomException("Função não cadastrada!");
-        }
-        Optional<Company> company = companyRepository.findById(data.getCompanyId());
-        if (!company.isPresent()){
-            throw new NotFoundCustomException("Empresa não cadastrada!");
-        }
+        VerifyEmployeeFindByName(data);
+        Optional<Role> role = getOptionalRole(data);
+        Optional<Company> company = getOptionalCompany(data);
 
         Company companyFound = company.get();
         Role roleFound = role.get();
@@ -75,20 +63,18 @@ public class EmployeeService {
         return new EmployeeResponseDTO(newEmployee);
     }
 
+    private void VerifyEmployeeFindByName(EmployeeRequestDTO data) {
+        Optional<Employee> employee = Optional.ofNullable(employeeRepository.findByName(data.getName()));
+        if (employee.isPresent()){
+            throw new BadRequestCustomException("Funcionário já cadatrado!");
+        }
+    }
+
     @Transactional
     public EmployeeResponseDTO put(EmployeeRequestDTO data){
-        Optional<Employee> employee = employeeRepository.findById(data.getId());
-        if (!employee.isPresent()){
-            throw new BadRequestCustomException("Funcionário não cadatrado!");
-        }
-        Optional<Role> role = roleRepository.findById(data.getRoleId());
-        if (!role.isPresent()){
-            throw new NotFoundCustomException("Função não cadastrada!");
-        }
-        Optional<Company> company = companyRepository.findById(data.getCompanyId());
-        if (!company.isPresent()){
-            throw new NotFoundCustomException("Empresa não cadastrada!");
-        }
+        Optional<Employee> employee = getOptionalEmployeeFindById(data.getId());
+        Optional<Role> role = getOptionalRole(data);
+        Optional<Company> company = getOptionalCompany(data);
 
         Company companyFound = company.get();
         Role roleFound = role.get();
@@ -96,6 +82,30 @@ public class EmployeeService {
         SetDadosUpdateEmployee(newEmployee, data, companyFound, roleFound);
 
         return new EmployeeResponseDTO(newEmployee);
+    }
+
+    private Optional<Employee> getOptionalEmployeeFindById(String id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        if (!employee.isPresent()){
+            throw new BadRequestCustomException("Funcionário não cadatrado!");
+        }
+        return employee;
+    }
+
+    private Optional<Role> getOptionalRole(EmployeeRequestDTO data) {
+        Optional<Role> role = roleRepository.findById(data.getRoleId());
+        if (!role.isPresent()){
+            throw new NotFoundCustomException("Função não cadastrada!");
+        }
+        return role;
+    }
+
+    private Optional<Company> getOptionalCompany(EmployeeRequestDTO data) {
+        Optional<Company> company = companyRepository.findById(data.getCompanyId());
+        if (!company.isPresent()){
+            throw new NotFoundCustomException("Empresa não cadastrada!");
+        }
+        return company;
     }
 
     private void SetDadosUpdateEmployee(Employee employee, EmployeeRequestDTO data, Company company, Role role){
