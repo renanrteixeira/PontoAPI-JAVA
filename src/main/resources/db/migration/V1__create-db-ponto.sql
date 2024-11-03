@@ -37,21 +37,21 @@ CREATE TABLE `employees` (
   `admission` date NOT NULL,
   `gender` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `status` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `roleId` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `companyId` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `role_Id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `company_Id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `IX_employees_companyId` (`companyId`),
-  KEY `IX_employees_roleId` (`roleId`),
-  CONSTRAINT `FK_employees_companies_companyId` FOREIGN KEY (`companyId`) REFERENCES `companies` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `FK_employees_roles_roleId` FOREIGN KEY (`roleId`) REFERENCES `roles` (`id`) ON DELETE CASCADE
+  KEY `IX_employees_companyId` (`company_Id`),
+  KEY `IX_employees_roleId` (`role_Id`),
+  CONSTRAINT `FK_employees_companies_companyId` FOREIGN KEY (`company_Id`) REFERENCES `companies` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `FK_employees_roles_roleId` FOREIGN KEY (`role_Id`) REFERENCES `roles` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `hours` (
   `id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `employeeId` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `employee_Id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date` date NOT NULL,
   `type` int NOT NULL,
-  `typeDateId` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `typeDate_Id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `hour1` time NOT NULL,
   `hour2` time NOT NULL,
   `hour3` time NOT NULL,
@@ -60,8 +60,8 @@ CREATE TABLE `hours` (
   `hour6` time NOT NULL,
   `balance` time NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `IX_hours_employeeId` (`employeeId`),
-  KEY `IX_hours_typeDateId` (`typeDateId`),
-  CONSTRAINT `FK_hours_employees_employeeId` FOREIGN KEY (`employeeId`) REFERENCES `employees` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `FK_hours_typedates_typeDateId` FOREIGN KEY (`typeDateId`) REFERENCES `typedates` (`id`) ON DELETE CASCADE
+  KEY `IX_hours_employeeId` (`employee_Id`),
+  KEY `IX_hours_typeDateId` (`typeDate_Id`),
+  CONSTRAINT `FK_hours_employees_employeeId` FOREIGN KEY (`employee_Id`) REFERENCES `employees` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `FK_hours_typedates_typeDateId` FOREIGN KEY (`typeDate_Id`) REFERENCES `typedates` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

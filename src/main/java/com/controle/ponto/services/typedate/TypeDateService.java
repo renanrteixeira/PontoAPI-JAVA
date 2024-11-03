@@ -4,7 +4,7 @@ import com.controle.ponto.domain.dto.typedate.TypeDateRequestDTO;
 import com.controle.ponto.domain.typedate.TypeDate;
 import com.controle.ponto.exceptions.BadRequestCustomException;
 import com.controle.ponto.exceptions.NotFoundCustomException;
-import com.controle.ponto.repositories.TypeDateRepository;
+import com.controle.ponto.repositories.typedate.TypeDateRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

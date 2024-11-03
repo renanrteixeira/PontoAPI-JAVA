@@ -1,4 +1,4 @@
-package com.controle.ponto.repositories;
+package com.controle.ponto.repositories.typedate;
 
 import com.controle.ponto.domain.typedate.TypeDate;
 import org.springframework.data.jpa.repository.JpaRepository;

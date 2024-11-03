@@ -1,6 +1,7 @@
 package com.controle.ponto.domain.role;
 
 import com.controle.ponto.domain.dto.role.RoleRequestDTO;
+import com.controle.ponto.domain.employee.Employee;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,6 +19,9 @@ public class Role {
     String id;
 
     String name;
+
+    @OneToOne(mappedBy = "role")
+    private Employee employee;
 
     public Role(RoleRequestDTO role){
         this.id = role.getId();

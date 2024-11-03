@@ -1,8 +1,6 @@
 package com.controle.ponto.contollers.role;
 
 import com.controle.ponto.domain.dto.role.RoleRequestDTO;
-import com.controle.ponto.exceptions.BadRequestCustomException;
-import com.controle.ponto.exceptions.NotFoundCustomException;
 import com.controle.ponto.services.role.RoleService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
