@@ -5,6 +5,8 @@ import com.controle.ponto.domain.employee.Employee;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Table(name = "companies")
 @Entity(name = "companies")
 @AllArgsConstructor
@@ -25,8 +27,8 @@ public class Company {
 
     String telephone;
 
-    @OneToOne(mappedBy = "company")
-    private Employee employee;
+    @OneToMany(mappedBy = "company")
+    private List<Employee> employee;
 
     public Company(CompanyRequestDTO company){
         this.id = company.getId();

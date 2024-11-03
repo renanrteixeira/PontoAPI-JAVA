@@ -5,6 +5,8 @@ import com.controle.ponto.domain.employee.Employee;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Table(name="roles")
 @Entity(name="roles")
 @EqualsAndHashCode(of = "id")
@@ -20,8 +22,8 @@ public class Role {
 
     String name;
 
-    @OneToOne(mappedBy = "role")
-    private Employee employee;
+    @OneToMany(mappedBy = "role")
+    private List<Employee> employee;
 
     public Role(RoleRequestDTO role){
         this.id = role.getId();

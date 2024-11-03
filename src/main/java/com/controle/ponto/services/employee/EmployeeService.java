@@ -31,7 +31,7 @@ public class EmployeeService {
     public List<EmployeeResponseDTO> findAll(){
         var employees = employeeRepository.findAll();
 
-        List<EmployeeResponseDTO> listEmployee = new ArrayList<EmployeeResponseDTO>();
+        List<EmployeeResponseDTO> listEmployee = new ArrayList<>();
 
         for (Employee employee : employees) {
             EmployeeResponseDTO empl = new EmployeeResponseDTO(employee);
@@ -68,15 +68,7 @@ public class EmployeeService {
 
         Company companyFound = company.get();
         Role roleFound = role.get();
-
-        Employee newEmployee = new Employee();
-        newEmployee.setCompany(companyFound);
-        newEmployee.setId(data.getId());
-        newEmployee.setName(data.getName());
-        newEmployee.setAdmission(data.getAdmission());
-        newEmployee.setGender(data.getGender());
-        newEmployee.setStatus(data.getStatus());
-        newEmployee.setRole(roleFound);
+        Employee newEmployee = new Employee(data, roleFound, companyFound);
 
         employeeRepository.save(newEmployee);
 
@@ -100,15 +92,18 @@ public class EmployeeService {
 
         Company companyFound = company.get();
         Role roleFound = role.get();
-
         Employee newEmployee = employee.get();
-        newEmployee.setAdmission(data.getAdmission());
-        newEmployee.setName(data.getName());
-        newEmployee.setCompany(companyFound);
-        newEmployee.setGender(data.getGender());
-        newEmployee.setStatus(data.getStatus());
-        newEmployee.setRole(roleFound);
+        SetDadosUpdateEmployee(newEmployee, data, companyFound, roleFound);
 
         return new EmployeeResponseDTO(newEmployee);
+    }
+
+    private void SetDadosUpdateEmployee(Employee employee, EmployeeRequestDTO data, Company company, Role role){
+        employee.setAdmission(data.getAdmission());
+        employee.setName(data.getName());
+        employee.setCompany(company);
+        employee.setGender(data.getGender());
+        employee.setStatus(data.getStatus());
+        employee.setRole(role);
     }
 }

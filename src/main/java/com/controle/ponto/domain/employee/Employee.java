@@ -43,4 +43,14 @@ public class Employee {
     @JoinColumn(name = "company_Id")
     Company company;
 
+    public Employee(EmployeeRequestDTO data, Role role, Company company){
+        this.setId(data.getId());
+        this.setAdmission(data.getAdmission());
+        this.setName(data.getName());
+        this.setCompany(company);
+        this.setGender(data.getGender());
+        this.setStatus(data.getStatus());
+        this.setRole(role);
+    }
+
 }
