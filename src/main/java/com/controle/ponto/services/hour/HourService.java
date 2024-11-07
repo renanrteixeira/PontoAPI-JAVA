@@ -75,10 +75,7 @@ public class HourService {
 
     public HourResponseDTO post(HourRequestDTO data){
         String date = formatDate(data.getDate());
-        Optional<List<Hour>> hour = Optional.ofNullable(hourRepository.findByEmployeeIdDate(data.getEmployeeId(), date));
-        if (!hour.get().isEmpty()) {
-            throw new BadRequestCustomException("Hora já inserida!");
-        }
+        VerifyExistsEmployeeInDate(data, date);
         Optional<Employee> employee = getEmployeeFindById(data);
         Optional<TypeDate> typeDate = getTypeDateFindById(data);
 
@@ -87,6 +84,13 @@ public class HourService {
         hourRepository.save(newHour);
 
         return new HourResponseDTO(newHour);
+    }
+
+    private void VerifyExistsEmployeeInDate(HourRequestDTO data, String date) {
+        Optional<List<Hour>> hour = Optional.ofNullable(hourRepository.findByEmployeeIdDate(data.getEmployeeId(), date));
+        if (!hour.get().isEmpty()) {
+            throw new BadRequestCustomException("Hora já inserida!");
+        }
     }
 
     private Optional<Employee> getEmployeeFindById(HourRequestDTO data) {
@@ -107,7 +111,7 @@ public class HourService {
     }
 
     private Hour ProcessHour(HourRequestDTO data, LocalTime timeDay, Employee employee, TypeDate typeDate){
-        var durationMorning = calcularIntervaloPeriodo(data.getEnterMorging(), data.getExitMorging());
+        var durationMorning = calcularIntervaloPeriodo(data.getEnterMorning(), data.getExitMorning());
         var durationAfternoon = calcularIntervaloPeriodo(data.getEnterAfternoon(), data.getExitAfternoon());
         var durationOvertime = calcularIntervaloPeriodo(data.getEnterOvertime(), data.getExitOvertime());
 
@@ -161,9 +165,6 @@ public class HourService {
     @Transactional
     public HourResponseDTO put(HourRequestDTO data){
         Optional<Hour> hourFound = getHourFindById(data.getId());
-        if (!hourFound.isPresent()){
-            throw new NotFoundCustomException("Hora não encontrada!");
-        }
         Optional<Employee> employee = getEmployeeFindById(data);
         Optional<TypeDate> typeDate = getTypeDateFindById(data);
 
@@ -188,9 +189,7 @@ public class HourService {
 
     public void delete(String id){
         Optional<Hour> hourFound = getHourFindById(id);
-        if (!hourFound.isPresent()){
-            throw new NotFoundCustomException("Hora não encontrada!");
-        }
+
         Hour newHour = hourFound.get();
 
         hourRepository.delete(newHour);

@@ -60,8 +60,8 @@ public class Hour {
         this.date = data.getDate();
         this.setEmployee(employee);
         this.setTypeDate(typeDate);
-        this.enterMorning = data.getEnterMorging();
-        this.exitMorning = data.getExitMorging();
+        this.enterMorning = data.getEnterMorning();
+        this.exitMorning = data.getExitMorning();
         this.enterAfternoon = data.getEnterAfternoon();
         this.exitAfternoon = data.getExitAfternoon();
         this.enterOvertime = data.getEnterOvertime();

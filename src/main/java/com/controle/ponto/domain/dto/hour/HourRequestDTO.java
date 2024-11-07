@@ -25,10 +25,10 @@ public class HourRequestDTO {
     String typeDateId;
 
     @NotNull
-    LocalTime enterMorging;
+    LocalTime enterMorning;
 
     @NotNull
-    LocalTime exitMorging;
+    LocalTime exitMorning;
 
     @NotNull
     LocalTime enterAfternoon;
