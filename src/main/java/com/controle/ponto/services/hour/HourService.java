@@ -2,11 +2,9 @@ package com.controle.ponto.services.hour;
 
 import com.controle.ponto.domain.dto.hour.HourRequestDTO;
 import com.controle.ponto.domain.dto.hour.HourResponseDTO;
-import com.controle.ponto.domain.dto.role.RoleResponseDTO;
 import com.controle.ponto.domain.employee.Employee;
 import com.controle.ponto.domain.enumerator.TypeHour;
 import com.controle.ponto.domain.hour.Hour;
-import com.controle.ponto.domain.role.Role;
 import com.controle.ponto.domain.typedate.TypeDate;
 import com.controle.ponto.exceptions.BadRequestCustomException;
 import com.controle.ponto.exceptions.NotFoundCustomException;
@@ -109,9 +107,9 @@ public class HourService {
     }
 
     private Hour ProcessHour(HourRequestDTO data, LocalTime timeDay, Employee employee, TypeDate typeDate){
-        var durationMorning = calcularIntervaloPeriodo(data.getHour1(), data.getHour2());
-        var durationAfternoon = calcularIntervaloPeriodo(data.getHour3(), data.getHour4());
-        var durationOvertime = calcularIntervaloPeriodo(data.getHour5(), data.getHour6());
+        var durationMorning = calcularIntervaloPeriodo(data.getEnterMorging(), data.getExitMorging());
+        var durationAfternoon = calcularIntervaloPeriodo(data.getEnterAfternoon(), data.getExitAfternoon());
+        var durationOvertime = calcularIntervaloPeriodo(data.getEnterOvertime(), data.getExitOvertime());
 
         var totalDay = calcularSomaDia(durationMorning, durationAfternoon, durationOvertime);
         var result = calcularIntervaloPeriodo(totalDay, timeDay);
@@ -124,7 +122,7 @@ public class HourService {
         }
 
         Hour returnHour = new Hour(data, employee, typeDate, result);
-        returnHour.setType(typeHour);
+        returnHour.setIsNegative(typeHour);
         return returnHour;
     }
 
@@ -175,14 +173,14 @@ public class HourService {
 
         newHour.setEmployee(processHour.getEmployee());
         newHour.setDate(processHour.getDate());
-        newHour.setType(processHour.getType());
+        newHour.setIsNegative(processHour.getIsNegative());
         newHour.setTypeDate(processHour.getTypeDate());
-        newHour.setHour1(processHour.getHour1());
-        newHour.setHour2(processHour.getHour2());
-        newHour.setHour3(processHour.getHour3());
-        newHour.setHour4(processHour.getHour4());
-        newHour.setHour5(processHour.getHour5());
-        newHour.setHour6(processHour.getHour6());
+        newHour.setEnterMorning(processHour.getEnterMorning());
+        newHour.setExitMorning(processHour.getExitMorning());
+        newHour.setEnterAfternoon(processHour.getEnterAfternoon());
+        newHour.setExitAfternoon(processHour.getExitAfternoon());
+        newHour.setEnterOvertime(processHour.getEnterOvertime());
+        newHour.setExitOvertime(processHour.getExitOvertime());
         newHour.setBalance(processHour.getBalance());
 
         return new HourResponseDTO(newHour);

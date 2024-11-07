@@ -1,6 +1,5 @@
 package com.controle.ponto.domain.dto.hour;
 
-import com.controle.ponto.domain.enumerator.TypeHour;
 import com.controle.ponto.domain.hour.Hour;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -26,28 +25,28 @@ public class HourResponseDTO {
     Date date;
 
     @NotNull
-    int type;
+    int isNegative;
 
     @NotNull
     String typeDateId;
 
     @NotNull
-    LocalTime hour1;
+    LocalTime enterMorning;
 
     @NotNull
-    LocalTime hour2;
+    LocalTime exitMorning;
 
     @NotNull
-    LocalTime hour3;
+    LocalTime enterAfternoon;
 
     @NotNull
-    LocalTime hour4;
+    LocalTime exitAfternoon;
 
     @NotNull
-    LocalTime hour5;
+    LocalTime enterOvertime;
 
     @NotNull
-    LocalTime hour6;
+    LocalTime exitOvertime;
 
     @NotNull
     LocalTime balance;
@@ -57,13 +56,13 @@ public class HourResponseDTO {
         this.date = hour.getDate();
         this.employeeId = hour.getEmployee().getId();
         this.typeDateId = hour.getTypeDate().getId();
-        this.type = hour.getType();
-        this.hour1 = hour.getHour1();
-        this.hour2 = hour.getHour2();
-        this.hour3 = hour.getHour3();
-        this.hour4 = hour.getHour4();
-        this.hour5 = hour.getHour5();
-        this.hour6 = hour.getHour6();
+        this.isNegative = hour.getIsNegative();
+        this.enterMorning = hour.getEnterMorning();
+        this.exitMorning = hour.getExitMorning();
+        this.enterAfternoon = hour.getEnterAfternoon();
+        this.exitAfternoon = hour.getExitAfternoon();
+        this.enterOvertime = hour.getEnterOvertime();
+        this.exitOvertime = hour.getExitOvertime();
         this.balance = hour.getBalance();
     }
 }

@@ -2,7 +2,6 @@ package com.controle.ponto.domain.hour;
 
 import com.controle.ponto.domain.dto.hour.HourRequestDTO;
 import com.controle.ponto.domain.employee.Employee;
-import com.controle.ponto.domain.enumerator.TypeHour;
 import com.controle.ponto.domain.typedate.TypeDate;
 import jakarta.persistence.*;
 import lombok.*;
@@ -29,23 +28,30 @@ public class Hour {
 
     Date date;
 
-    int type;
+    @Column(name = "type")
+    int isNegative;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "typeDate_Id")
     TypeDate typeDate;
 
-    LocalTime hour1;
+    @Column(name = "hour1")
+    LocalTime enterMorning;
 
-    LocalTime hour2;
+    @Column(name = "hour2")
+    LocalTime exitMorning;
 
-    LocalTime hour3;
+    @Column(name = "hour3")
+    LocalTime enterAfternoon;
 
-    LocalTime hour4;
+    @Column(name = "hour4")
+    LocalTime exitAfternoon;
 
-    LocalTime hour5;
+    @Column(name = "hour5")
+    LocalTime enterOvertime;
 
-    LocalTime hour6;
+    @Column(name = "hour6")
+    LocalTime exitOvertime;
 
     LocalTime balance;
 
@@ -54,12 +60,12 @@ public class Hour {
         this.date = data.getDate();
         this.setEmployee(employee);
         this.setTypeDate(typeDate);
-        this.hour1 = data.getHour1();
-        this.hour2 = data.getHour2();
-        this.hour3 = data.getHour3();
-        this.hour4 = data.getHour4();
-        this.hour5 = data.getHour5();
-        this.hour6 = data.getHour6();
+        this.enterMorning = data.getEnterMorging();
+        this.exitMorning = data.getExitMorging();
+        this.enterAfternoon = data.getEnterAfternoon();
+        this.exitAfternoon = data.getExitAfternoon();
+        this.enterOvertime = data.getEnterOvertime();
+        this.exitOvertime = data.getExitOvertime();
         this.balance = balance;
     }
 
