@@ -1,11 +1,13 @@
 package com.controle.ponto.domain.typedate;
 
 import com.controle.ponto.domain.dto.typedate.TypeDateRequestDTO;
+import com.controle.ponto.domain.hour.Hour;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Duration;
 import java.time.LocalTime;
+import java.util.List;
 
 @Table(name="typedates")
 @Entity(name="typedates")
@@ -25,6 +27,9 @@ public class TypeDate {
     LocalTime time;
 
     char weekend;
+
+    @OneToMany(mappedBy = "typeDate")
+    private List<Hour> hour;
 
     public TypeDate(TypeDateRequestDTO typeDateRequest){
         this.id = typeDateRequest.getId();

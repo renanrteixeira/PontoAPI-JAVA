@@ -51,7 +51,7 @@ CREATE TABLE `hours` (
   `employee_Id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date` date NOT NULL,
   `type` int NOT NULL,
-  `typeDate_Id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `type_date_Id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `hour1` time NOT NULL,
   `hour2` time NOT NULL,
   `hour3` time NOT NULL,
@@ -61,7 +61,7 @@ CREATE TABLE `hours` (
   `balance` time NOT NULL,
   PRIMARY KEY (`id`),
   KEY `IX_hours_employeeId` (`employee_Id`),
-  KEY `IX_hours_typeDateId` (`typeDate_Id`),
+  KEY `IX_hours_typeDateId` (`type_date_Id`),
   CONSTRAINT `FK_hours_employees_employeeId` FOREIGN KEY (`employee_Id`) REFERENCES `employees` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `FK_hours_typedates_typeDateId` FOREIGN KEY (`typeDate_Id`) REFERENCES `typedates` (`id`) ON DELETE CASCADE
+  CONSTRAINT `FK_hours_typedates_typeDateId` FOREIGN KEY (`type_date_Id`) REFERENCES `typedates` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

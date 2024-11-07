@@ -2,11 +2,13 @@ package com.controle.ponto.domain.employee;
 
 import com.controle.ponto.domain.company.Company;
 import com.controle.ponto.domain.dto.employee.EmployeeRequestDTO;
+import com.controle.ponto.domain.hour.Hour;
 import com.controle.ponto.domain.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Table(name = "employees")
 @Entity(name = "employees")
@@ -42,6 +44,9 @@ public class Employee {
 //    @OneToOne
     @JoinColumn(name = "company_Id")
     Company company;
+
+    @OneToMany(mappedBy = "employee")
+    private List<Hour> hour;
 
     public Employee(EmployeeRequestDTO data, Role role, Company company){
         this.setId(data.getId());
