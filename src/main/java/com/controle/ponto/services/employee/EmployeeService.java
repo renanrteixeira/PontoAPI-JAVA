@@ -35,6 +35,10 @@ public class EmployeeService implements IService<EmployeeRequestDTO, EmployeeRes
         List<EmployeeResponseDTO> listEmployee = new ArrayList<>();
 
         for (Employee employee : employees) {
+            Optional<Role> role = roleRepository.findById(employee.getRole().getId());
+            Optional<Company> company = companyRepository.findById(employee.getCompany().getId());
+            employee.setRole(role.get());
+            employee.setCompany(company.get());
             EmployeeResponseDTO empl = new EmployeeResponseDTO(employee);
             listEmployee.add(empl);
         }
@@ -45,6 +49,10 @@ public class EmployeeService implements IService<EmployeeRequestDTO, EmployeeRes
     public EmployeeResponseDTO findById(String id){
         Optional<Employee> employee = getOptionalEmployeeFindById(id);
         Employee foundEmployee = employee.get();
+        Optional<Role> role = roleRepository.findById(foundEmployee.getRole().getId());
+        Optional<Company> company = companyRepository.findById(foundEmployee.getCompany().getId());
+        foundEmployee.setRole(role.get());
+        foundEmployee.setCompany(company.get());
 
         return  new EmployeeResponseDTO(foundEmployee);
 

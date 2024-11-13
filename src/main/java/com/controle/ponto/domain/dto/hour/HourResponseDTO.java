@@ -1,5 +1,7 @@
 package com.controle.ponto.domain.dto.hour;
 
+import com.controle.ponto.domain.dto.employee.EmployeeResponseDTO;
+import com.controle.ponto.domain.dto.typedate.TypeDateResponseDTO;
 import com.controle.ponto.domain.hour.Hour;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -19,7 +21,7 @@ public class HourResponseDTO {
     String id;
 
     @NotNull
-    String employeeId;
+    EmployeeResponseDTO employee;
 
     @NotNull
     Date date;
@@ -28,7 +30,7 @@ public class HourResponseDTO {
     int isNegative;
 
     @NotNull
-    String typeDateId;
+    TypeDateResponseDTO typeDate;
 
     @NotNull
     LocalTime enterMorning;
@@ -54,8 +56,10 @@ public class HourResponseDTO {
     public HourResponseDTO(Hour hour){
         this.id = hour.getId();
         this.date = hour.getDate();
-        this.employeeId = hour.getEmployee().getId();
-        this.typeDateId = hour.getTypeDate().getId();
+        EmployeeResponseDTO employeeResponseDTO = new EmployeeResponseDTO(hour.getEmployee());
+        this.setEmployee(employeeResponseDTO);
+        TypeDateResponseDTO typeDateResponseDTO = new TypeDateResponseDTO(hour.getTypeDate());
+        this.setTypeDate(typeDateResponseDTO);
         this.isNegative = hour.getIsNegative();
         this.enterMorning = hour.getEnterMorning();
         this.exitMorning = hour.getExitMorning();

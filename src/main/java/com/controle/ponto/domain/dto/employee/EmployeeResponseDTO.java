@@ -1,5 +1,7 @@
 package com.controle.ponto.domain.dto.employee;
 
+import com.controle.ponto.domain.dto.company.CompanyResponseDTO;
+import com.controle.ponto.domain.dto.role.RoleResponseDTO;
 import com.controle.ponto.domain.employee.Employee;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -30,10 +32,10 @@ public class EmployeeResponseDTO {
     char status;
 
     @NotNull
-    String roleId;
+    RoleResponseDTO role;
 
     @NotNull
-    String companyId;
+    CompanyResponseDTO company;
 
     public EmployeeResponseDTO(Employee employee){
         this.id = employee.getId();
@@ -41,7 +43,9 @@ public class EmployeeResponseDTO {
         this.admission = employee.getAdmission();
         this.gender = employee.getGender();
         this.status = employee.getStatus();
-        this.roleId = employee.getRole().getId();
-        this.companyId = employee.getCompany().getId();
+        RoleResponseDTO role = new RoleResponseDTO(employee.getRole());
+        this.setRole(role);
+        CompanyResponseDTO company = new CompanyResponseDTO(employee.getCompany());
+        this.setCompany(company);
     }
 }
