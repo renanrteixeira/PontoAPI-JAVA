@@ -1,16 +1,20 @@
 package com.controle.ponto.services.hour;
 
+import com.controle.ponto.domain.company.Company;
 import com.controle.ponto.domain.dto.hour.HourRequestDTO;
 import com.controle.ponto.domain.dto.hour.HourResponseDTO;
 import com.controle.ponto.domain.employee.Employee;
 import com.controle.ponto.domain.enumerator.TypeHour;
 import com.controle.ponto.domain.hour.Hour;
+import com.controle.ponto.domain.role.Role;
 import com.controle.ponto.domain.typedate.TypeDate;
 import com.controle.ponto.exceptions.BadRequestCustomException;
 import com.controle.ponto.exceptions.NotFoundCustomException;
 import com.controle.ponto.interfaces.services.IServiceHour;
+import com.controle.ponto.repositories.company.CompanyRepository;
 import com.controle.ponto.repositories.employee.EmployeeRepository;
 import com.controle.ponto.repositories.hour.HourRepository;
+import com.controle.ponto.repositories.role.RoleRepository;
 import com.controle.ponto.repositories.typedate.TypeDateRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +37,19 @@ public class HourService implements IServiceHour<HourRequestDTO, HourResponseDTO
     @Autowired
     private TypeDateRepository typeDateRepository;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private CompanyRepository companyRepository;
+
     public List<HourResponseDTO> findAll(){
         var hours = hourRepository.findAll();
 
         List<HourResponseDTO> hourList = new ArrayList<>();
 
         for (Hour hour : hours){
+            SetHour(hour);
             HourResponseDTO newHour = new HourResponseDTO(hour);
             hourList.add(newHour);
         }
@@ -49,8 +60,20 @@ public class HourService implements IServiceHour<HourRequestDTO, HourResponseDTO
     public HourResponseDTO findById(@PathVariable String id){
         Optional<Hour> hour = getHourFindById(id);
         Hour hourFound = hour.get();
-
+        SetHour(hourFound);
         return new HourResponseDTO(hourFound);
+    }
+
+    private void SetHour(Hour hourFound) {
+        Optional<Employee> employee = employeeRepository.findById(hourFound.getEmployee().getId());
+        Optional<TypeDate> typeDate = typeDateRepository.findById(hourFound.getTypeDate().getId());
+        Employee newEmployee = employee.get();
+        Optional<Role> role = roleRepository.findById(newEmployee.getRole().getId());
+        Optional<Company> company = companyRepository.findById(newEmployee.getCompany().getId());
+        newEmployee.setRole(role.get());
+        newEmployee.setCompany(company.get());
+        hourFound.setEmployee(newEmployee);
+        hourFound.setTypeDate(typeDate.get());
     }
 
     public List<HourResponseDTO> findByEmployee(@PathVariable String id){
@@ -59,6 +82,7 @@ public class HourService implements IServiceHour<HourRequestDTO, HourResponseDTO
         List<HourResponseDTO> hourList = new ArrayList<>();
 
         for (Hour hour : hours){
+            SetHour(hour);
             HourResponseDTO newHour = new HourResponseDTO(hour);
             hourList.add(newHour);
         }
