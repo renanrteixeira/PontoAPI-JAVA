@@ -1,6 +1,7 @@
 package com.controle.ponto.contollers.role;
 
 import com.controle.ponto.domain.dto.role.RoleRequestDTO;
+import com.controle.ponto.interfaces.controllers.IContoller;
 import com.controle.ponto.services.role.RoleService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,10 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/role")
-public class RoleController {
+public class RoleController implements IContoller<RoleRequestDTO> {
 
     @Autowired
-    RoleService service;
+    private RoleService service;
 
     @GetMapping
     public ResponseEntity findAll(){

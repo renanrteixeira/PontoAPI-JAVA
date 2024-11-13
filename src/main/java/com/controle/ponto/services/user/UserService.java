@@ -5,6 +5,7 @@ import com.controle.ponto.domain.dto.user.UserRequestDTO;
 import com.controle.ponto.domain.user.User;
 import com.controle.ponto.exceptions.BadRequestCustomException;
 import com.controle.ponto.exceptions.user.UserNotFoundException;
+import com.controle.ponto.interfaces.services.IService;
 import com.controle.ponto.repositories.user.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements IService<UserRequestDTO, User> {
 
     @Autowired
     private UserRepository repository;

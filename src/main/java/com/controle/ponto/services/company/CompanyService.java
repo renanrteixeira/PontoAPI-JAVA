@@ -5,6 +5,7 @@ import com.controle.ponto.domain.dto.company.CompanyRequestDTO;
 import com.controle.ponto.domain.dto.company.CompanyResponseDTO;
 import com.controle.ponto.exceptions.BadRequestCustomException;
 import com.controle.ponto.exceptions.NotFoundCustomException;
+import com.controle.ponto.interfaces.services.IService;
 import com.controle.ponto.repositories.company.CompanyRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CompanyService {
+public class CompanyService implements IService<CompanyRequestDTO, CompanyResponseDTO> {
 
     @Autowired
-    CompanyRepository repository;
+    private CompanyRepository repository;
 
     public List<CompanyResponseDTO> findAll(){
         var companies = repository.findAll();

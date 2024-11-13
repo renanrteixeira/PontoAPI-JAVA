@@ -1,7 +1,7 @@
 package com.controle.ponto.contollers.company;
 
-import com.controle.ponto.domain.company.Company;
 import com.controle.ponto.domain.dto.company.CompanyRequestDTO;
+import com.controle.ponto.interfaces.controllers.IContoller;
 import com.controle.ponto.services.company.CompanyService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +12,10 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/company")
-public class CompanyController {
+public class CompanyController implements IContoller<CompanyRequestDTO> {
 
     @Autowired
-    CompanyService service;
+    private CompanyService service;
 
     @GetMapping
     public ResponseEntity findAll(){

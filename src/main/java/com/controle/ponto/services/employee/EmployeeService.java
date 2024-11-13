@@ -7,6 +7,7 @@ import com.controle.ponto.domain.employee.Employee;
 import com.controle.ponto.domain.role.Role;
 import com.controle.ponto.exceptions.BadRequestCustomException;
 import com.controle.ponto.exceptions.NotFoundCustomException;
+import com.controle.ponto.interfaces.services.IService;
 import com.controle.ponto.repositories.company.CompanyRepository;
 import com.controle.ponto.repositories.employee.EmployeeRepository;
 import com.controle.ponto.repositories.role.RoleRepository;
@@ -19,14 +20,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class EmployeeService {
+public class EmployeeService implements IService<EmployeeRequestDTO, EmployeeResponseDTO> {
 
     @Autowired
-    EmployeeRepository employeeRepository;
+    private EmployeeRepository employeeRepository;
     @Autowired
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
     @Autowired
-    CompanyRepository companyRepository;
+    private CompanyRepository companyRepository;
 
     public List<EmployeeResponseDTO> findAll(){
         var employees = employeeRepository.findAll();

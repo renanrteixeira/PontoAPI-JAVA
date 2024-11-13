@@ -1,6 +1,7 @@
 package com.controle.ponto.contollers.employee;
 
 import com.controle.ponto.domain.dto.employee.EmployeeRequestDTO;
+import com.controle.ponto.interfaces.controllers.IContoller;
 import com.controle.ponto.services.employee.EmployeeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,10 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/employee")
-public class EmployeeController {
+public class EmployeeController implements IContoller<EmployeeRequestDTO> {
 
     @Autowired
-    EmployeeService service;
+    private EmployeeService service;
 
     @GetMapping
     public ResponseEntity findAll(){

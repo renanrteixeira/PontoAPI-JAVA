@@ -15,9 +15,9 @@ import org.springframework.stereotype.Service;
 public class TokenService implements UserDetailsService {
 
     @Autowired
-    UserRepository repository;
+    private UserRepository repository;
     @Autowired
-    JwtService jwtService;
+    private JwtService jwtService;
 
     public String getToken(TokenRequestDTO data){
         User user = repository.findByUsername(data.username());

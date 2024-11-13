@@ -5,6 +5,7 @@ import com.controle.ponto.domain.dto.role.RoleResponseDTO;
 import com.controle.ponto.domain.role.Role;
 import com.controle.ponto.exceptions.BadRequestCustomException;
 import com.controle.ponto.exceptions.NotFoundCustomException;
+import com.controle.ponto.interfaces.services.IService;
 import com.controle.ponto.repositories.role.RoleRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class RoleService {
+public class RoleService implements IService<RoleRequestDTO, RoleResponseDTO> {
 
     @Autowired
-    RoleRepository repository;
+    private RoleRepository repository;
 
     public List<RoleResponseDTO> findAll(){
         var roles = repository.findAll();

@@ -17,16 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class TokenController {
 
     @Autowired
-    TokenService service;
+    private TokenService service;
 
     @PostMapping
     public ResponseEntity getToken(@RequestBody @Valid TokenRequestDTO data){
         String token = service.getToken(data);
         if (token == null){
             throw new UserNotFoundException();
-//            MessageResponseDTO message = new MessageResponseDTO(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), "Usuário ou senha inválidos!");
-//
-//            return ResponseEntity.badRequest().body(message);
         }
 
         TokenReponseDTO tokenReponse = new TokenReponseDTO(token);

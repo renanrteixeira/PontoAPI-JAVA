@@ -1,6 +1,7 @@
 package com.controle.ponto.contollers.hour;
 
 import com.controle.ponto.domain.dto.hour.HourRequestDTO;
+import com.controle.ponto.interfaces.controllers.IControllerHour;
 import com.controle.ponto.services.hour.HourService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,10 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/hour")
-public class HourController {
+public class HourController implements IControllerHour<HourRequestDTO> {
 
     @Autowired
-    HourService service;
+    private HourService service;
 
     @GetMapping
     public ResponseEntity findAll(){

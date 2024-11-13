@@ -1,6 +1,7 @@
 package com.controle.ponto.contollers.typedate;
 
 import com.controle.ponto.domain.dto.typedate.TypeDateRequestDTO;
+import com.controle.ponto.interfaces.controllers.IContoller;
 import com.controle.ponto.services.typedate.TypeDateService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,10 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/typedate")
-public class TypeDateController {
+public class TypeDateController implements IContoller<TypeDateRequestDTO> {
 
     @Autowired
-    TypeDateService service;
+    private TypeDateService service;
 
     @GetMapping
     public ResponseEntity findAll(){

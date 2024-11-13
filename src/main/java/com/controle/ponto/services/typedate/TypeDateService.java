@@ -5,6 +5,7 @@ import com.controle.ponto.domain.dto.typedate.TypeDateResponseDTO;
 import com.controle.ponto.domain.typedate.TypeDate;
 import com.controle.ponto.exceptions.BadRequestCustomException;
 import com.controle.ponto.exceptions.NotFoundCustomException;
+import com.controle.ponto.interfaces.services.IService;
 import com.controle.ponto.repositories.typedate.TypeDateRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TypeDateService {
+public class TypeDateService implements IService<TypeDateRequestDTO, TypeDateResponseDTO> {
 
     @Autowired
-    TypeDateRepository repository;
+    private TypeDateRepository repository;
 
     public List<TypeDateResponseDTO> findAll(){
         var typeDates = repository.findAll();

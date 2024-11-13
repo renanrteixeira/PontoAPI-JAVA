@@ -2,6 +2,7 @@ package com.controle.ponto.contollers.user;
 
 import com.controle.ponto.domain.dto.user.UserRequestDTO;
 import com.controle.ponto.domain.user.User;
+import com.controle.ponto.interfaces.controllers.IContoller;
 import com.controle.ponto.services.user.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/user")
-public class UserController {
+public class UserController implements IContoller<UserRequestDTO> {
 
     @Autowired
     private UserService service;

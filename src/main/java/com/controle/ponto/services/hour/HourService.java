@@ -8,6 +8,7 @@ import com.controle.ponto.domain.hour.Hour;
 import com.controle.ponto.domain.typedate.TypeDate;
 import com.controle.ponto.exceptions.BadRequestCustomException;
 import com.controle.ponto.exceptions.NotFoundCustomException;
+import com.controle.ponto.interfaces.services.IServiceHour;
 import com.controle.ponto.repositories.employee.EmployeeRepository;
 import com.controle.ponto.repositories.hour.HourRepository;
 import com.controle.ponto.repositories.typedate.TypeDateRepository;
@@ -21,16 +22,16 @@ import java.time.LocalTime;
 import java.util.*;
 
 @Service
-public class HourService {
+public class HourService implements IServiceHour<HourRequestDTO, HourResponseDTO> {
 
     @Autowired
-    HourRepository hourRepository;
+    private HourRepository hourRepository;
 
     @Autowired
-    EmployeeRepository employeeRepository;
+    private EmployeeRepository employeeRepository;
 
     @Autowired
-    TypeDateRepository typeDateRepository;
+    private TypeDateRepository typeDateRepository;
 
     public List<HourResponseDTO> findAll(){
         var hours = hourRepository.findAll();
