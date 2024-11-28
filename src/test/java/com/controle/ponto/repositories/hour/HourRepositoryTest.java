@@ -10,6 +10,8 @@ import com.controle.ponto.domain.employee.Employee;
 import com.controle.ponto.domain.hour.Hour;
 import com.controle.ponto.domain.role.Role;
 import com.controle.ponto.domain.typedate.TypeDate;
+import com.controle.ponto.repositories.employee.EmployeeRepository;
+import com.controle.ponto.repositories.typedate.TypeDateRepository;
 import com.controle.ponto.utils.Utils;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
@@ -33,14 +35,23 @@ class HourRepositoryTest {
     HourRepository hourRepository;
 
     @Autowired
+    EmployeeRepository employeeRepository;
+
+    @Autowired
+    TypeDateRepository typeDateRepository;
+
+    @Autowired
     EntityManager entityManager;
 
     @Test
     @DisplayName("Should get Hours of Employee by id from DB")
     void findByEmployeeId_Found() {
+        var employee = CreateEmployee();
+        var typeDate = createTypeDate();
+
         Date date = new Date();
         LocalTime localTime = LocalTime.of(1,0,0);
-        HourRequestDTO data = new HourRequestDTO(null, "123", date, "123", localTime, localTime, localTime, localTime,
+        HourRequestDTO data = new HourRequestDTO(null, employee.getId(), date, typeDate.getId(), localTime, localTime, localTime, localTime,
                 localTime, localTime);
 
         var newHour = this.createHour(data);
@@ -61,9 +72,12 @@ class HourRepositoryTest {
     @Test
     @DisplayName("Should get Hours of Employee by id and date from DB")
     void findByEmployeeIdDate_Found() {
+        var employee = CreateEmployee();
+        var typeDate = createTypeDate();
+
         Date date = new Date();
         LocalTime localTime = LocalTime.of(1,0,0);
-        HourRequestDTO data = new HourRequestDTO(null, "123", date, "123", localTime, localTime, localTime, localTime,
+        HourRequestDTO data = new HourRequestDTO(null, employee.getId(), date, typeDate.getId(), localTime, localTime, localTime, localTime,
                 localTime, localTime);
 
         var newHour = this.createHour(data);
@@ -118,18 +132,35 @@ class HourRepositoryTest {
         return typeDate;
     }
 
+    private Optional<Employee> employeeFindById(String id){
+        return employeeRepository.findById(id);
+    }
+
+    private Optional<TypeDate> typeDateFindById(String id){
+        return typeDateRepository.findById(id);
+    }
+
     private Hour createHour(HourRequestDTO data){
-        Date date = new Date();
-        EmployeeRequestDTO employeeRequestDTO = new EmployeeRequestDTO(null, "Fulano", date, 'M', 'A',  "123", "123");
-        var employee = createEmployee(employeeRequestDTO);
+        var employee = employeeFindById(data.getEmployeeId());
+        var typeDate = typeDateRepository.findById(data.getTypeDateId());
 
-        TypeDateRequestDTO typeDateRequestDTO = new TypeDateRequestDTO(null, "teste", LocalTime.of(1,0), 'S');
-        var typeDate = this.createTypeDate(typeDateRequestDTO);
-
-        Hour hour = new Hour(data, employee, typeDate, LocalTime.of(5,0,0));
+        Hour hour = new Hour(data, employee.get(), typeDate.get(), LocalTime.of(5,0,0));
         this.entityManager.persist(hour);
 
         return hour;
+    }
+
+    private TypeDate createTypeDate() {
+        TypeDateRequestDTO typeDateRequestDTO = new TypeDateRequestDTO(null, "teste", LocalTime.of(1,0), 'S');
+        var typeDate = this.createTypeDate(typeDateRequestDTO);
+        return typeDate;
+    }
+
+    private Employee CreateEmployee() {
+        Date date = new Date();
+        EmployeeRequestDTO employeeRequestDTO = new EmployeeRequestDTO(null, "Fulano", date, 'M', 'A',  "123", "123");
+        var employee = createEmployee(employeeRequestDTO);
+        return employee;
     }
 
 }

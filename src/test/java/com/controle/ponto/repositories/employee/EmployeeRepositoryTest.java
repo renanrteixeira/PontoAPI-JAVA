@@ -6,6 +6,8 @@ import com.controle.ponto.domain.dto.employee.EmployeeRequestDTO;
 import com.controle.ponto.domain.dto.role.RoleRequestDTO;
 import com.controle.ponto.domain.employee.Employee;
 import com.controle.ponto.domain.role.Role;
+import com.controle.ponto.repositories.company.CompanyRepository;
+import com.controle.ponto.repositories.role.RoleRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,6 +28,12 @@ class EmployeeRepositoryTest {
     EmployeeRepository employeeRepository;
 
     @Autowired
+    CompanyRepository companyRepository;
+
+    @Autowired
+    RoleRepository roleRepository;
+
+    @Autowired
     EntityManager entityManager;
 
     @Test
@@ -33,7 +41,14 @@ class EmployeeRepositoryTest {
     void findByName_Found() {
         String name = "Fulano";
         Date date = new Date();
-        EmployeeRequestDTO data = new EmployeeRequestDTO(null, name, date, 'M', 'A',  "123", "123");
+
+        RoleRequestDTO roleRequestDTO = new RoleRequestDTO(null, "role");
+        var role = this.createRole(roleRequestDTO);
+
+        CompanyRequestDTO companyRequestDTO = new CompanyRequestDTO(null, "company", "address", "11 1111-1111");
+        var company = this.createCompany(companyRequestDTO);
+
+        EmployeeRequestDTO data = new EmployeeRequestDTO(null, name, date, 'M', 'A',  role.getId(), company.getId());
 
         this.createEmployee(data);
 
@@ -65,14 +80,19 @@ class EmployeeRepositoryTest {
         return company;
     }
 
+    private Optional<Role> roleFindById(String id){
+        return roleRepository.findById(id);
+    }
+
+    private Optional<Company> companyFindById(String id){
+        return companyRepository.findById(id);
+    }
+
     private Employee createEmployee(EmployeeRequestDTO data){
-        RoleRequestDTO roleRequestDTO = new RoleRequestDTO(null, "role");
-        var role = this.createRole(roleRequestDTO);
+        var role = roleFindById(data.getRoleId());
+        var company = companyFindById(data.getCompanyId());
 
-        CompanyRequestDTO companyRequestDTO = new CompanyRequestDTO(null, "company", "address", "11 1111-1111");
-        var company = this.createCompany(companyRequestDTO);
-
-        Employee employee = new Employee(data, role, company);
+        Employee employee = new Employee(data, role.get(), company.get());
         this.entityManager.persist(employee);
 
         return employee;
