@@ -16,6 +16,7 @@ import com.controle.ponto.repositories.employee.EmployeeRepository;
 import com.controle.ponto.repositories.hour.HourRepository;
 import com.controle.ponto.repositories.role.RoleRepository;
 import com.controle.ponto.repositories.typedate.TypeDateRepository;
+import com.controle.ponto.utils.Utils;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -99,7 +100,7 @@ public class HourService implements IServiceHour<HourRequestDTO, HourResponseDTO
     }
 
     public HourResponseDTO post(HourRequestDTO data){
-        String date = formatDate(data.getDate());
+        String date = Utils.formatDate(data.getDate());
         VerifyExistsEmployeeInDate(data, date);
         Optional<Employee> employee = getEmployeeFindById(data);
         Optional<TypeDate> typeDate = getTypeDateFindById(data);
@@ -153,30 +154,6 @@ public class HourService implements IServiceHour<HourRequestDTO, HourResponseDTO
         Hour returnHour = new Hour(data, employee, typeDate, result);
         returnHour.setIsNegative(typeHour);
         return returnHour;
-    }
-
-    private String formatHour(Date hora, boolean negative){
-        String pattern = "HH:mm:ss";
-        if (negative){
-            pattern = "-HH:mm:ss";
-        }
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-
-        return simpleDateFormat.format(hora);
-    }
-
-    private String formatDate(Date date){
-        String pattern = "YYYY-MM-dd";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-
-        return simpleDateFormat.format(date);
-    }
-
-    private static Date calendarGetTime(int hour, int minute) {
-        Calendar c1 = Calendar.getInstance();
-        c1.set(Calendar.HOUR, hour);
-        c1.set(Calendar.MINUTE, minute);
-        return c1.getTime();
     }
 
     private Optional<TypeDate> getTypeDateFindById(HourRequestDTO data) {

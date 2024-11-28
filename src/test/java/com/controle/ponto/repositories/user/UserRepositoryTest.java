@@ -24,9 +24,9 @@ class UserRepositoryTest {
 
     @Test
     @DisplayName("Should get User successfully from DB")
-    void findByUsernameFound() {
+    void findByUsername_Found() {
         String userName = "teste";
-        UserRequestDTO data = new UserRequestDTO("1234", "Teste", "teste@teste.com", userName, "1234", 'S', 'A');
+        UserRequestDTO data = new UserRequestDTO(null, "Teste", "teste@teste.com", userName, "1234", 'S', 'A');
         this.createUser(data);
 
         Optional<User> result = Optional.ofNullable(this.userRepository.findByUsername(userName));
@@ -36,7 +36,7 @@ class UserRepositoryTest {
 
     @Test
     @DisplayName("Should not get User successfully from DB")
-    void findByUsernameNotFound() {
+    void findByUsername_NotFound() {
         String userName = "teste";
         Optional<User> result = Optional.ofNullable(this.userRepository.findByUsername(userName));
 
