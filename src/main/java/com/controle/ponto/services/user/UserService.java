@@ -1,12 +1,13 @@
 package com.controle.ponto.services.user;
 
-import com.controle.ponto.config.HashPassword;
 import com.controle.ponto.domain.dto.user.UserRequestDTO;
 import com.controle.ponto.domain.user.User;
 import com.controle.ponto.exceptions.BadRequestCustomException;
 import com.controle.ponto.exceptions.user.UserNotFoundException;
 import com.controle.ponto.interfaces.services.IService;
 import com.controle.ponto.repositories.user.UserRepository;
+import com.controle.ponto.utils.Date;
+import com.controle.ponto.utils.Password;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,13 +36,6 @@ public class UserService implements IService<UserRequestDTO, User> {
         return userfound;
     }
 
-    private String EncodePassword(String password){
-        HashPassword hashPassword = new HashPassword();
-        String newPassword = hashPassword.EncodePassword(password);
-
-        return newPassword;
-    }
-
     public User post(UserRequestDTO data){
 
         Optional<User> userFound = Optional.ofNullable(repository.findByUsername(data.getUsername()));
@@ -51,7 +45,7 @@ public class UserService implements IService<UserRequestDTO, User> {
         }
 
         User user_ = new User(data);
-        String password = EncodePassword(data.getPassword());
+        String password = Password.EncodePassword(data.getPassword());
         user_.setPassword(password);
         repository.save(user_);
 
@@ -69,7 +63,7 @@ public class UserService implements IService<UserRequestDTO, User> {
         newUser.setName(data.getName());
         newUser.setEmail(data.getEmail());
         newUser.setStatus(data.getStatus());
-        String password = EncodePassword(data.getPassword());
+        String password = Password.EncodePassword(data.getPassword());
         newUser.setPassword(password);
         newUser.setAdmin(data.getAdmin());
 

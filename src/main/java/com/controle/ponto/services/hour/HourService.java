@@ -16,13 +16,12 @@ import com.controle.ponto.repositories.employee.EmployeeRepository;
 import com.controle.ponto.repositories.hour.HourRepository;
 import com.controle.ponto.repositories.role.RoleRepository;
 import com.controle.ponto.repositories.typedate.TypeDateRepository;
-import com.controle.ponto.utils.Utils;
+import com.controle.ponto.utils.Date;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -100,7 +99,7 @@ public class HourService implements IServiceHour<HourRequestDTO, HourResponseDTO
     }
 
     public HourResponseDTO post(HourRequestDTO data){
-        String date = Utils.formatDate(data.getDate(), "YYYY-MM-dd");
+        String date = Date.formatDate(data.getDate(), "YYYY-MM-dd");
         VerifyExistsEmployeeInDate(data, date);
         Optional<Employee> employee = getEmployeeFindById(data);
         Optional<TypeDate> typeDate = getTypeDateFindById(data);

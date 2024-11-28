@@ -12,7 +12,7 @@ import com.controle.ponto.domain.role.Role;
 import com.controle.ponto.domain.typedate.TypeDate;
 import com.controle.ponto.repositories.employee.EmployeeRepository;
 import com.controle.ponto.repositories.typedate.TypeDateRepository;
-import com.controle.ponto.utils.Utils;
+import com.controle.ponto.utils.Date;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,7 +48,7 @@ class HourRepositoryTest {
         var employee = CreateEmployee();
         var typeDate = createTypeDate();
 
-        Date date = new Date();
+        java.util.Date date = new java.util.Date();
         LocalTime localTime = LocalTime.of(1,0,0);
         HourRequestDTO data = new HourRequestDTO(null, employee.getId(), date, typeDate.getId(), localTime, localTime, localTime, localTime,
                 localTime, localTime);
@@ -75,13 +74,13 @@ class HourRepositoryTest {
         var employee = CreateEmployee();
         var typeDate = createTypeDate();
 
-        Date date = new Date();
+        java.util.Date date = new java.util.Date();
         LocalTime localTime = LocalTime.of(1,0,0);
         HourRequestDTO data = new HourRequestDTO(null, employee.getId(), date, typeDate.getId(), localTime, localTime, localTime, localTime,
                 localTime, localTime);
 
         var newHour = this.createHour(data);
-        var searchDate = Utils.formatDate(newHour.getDate(), "YYYY-MM-dd");
+        var searchDate = Date.formatDate(newHour.getDate(), "YYYY-MM-dd");
         Optional<List<Hour>> result = Optional.ofNullable(hourRepository.findByEmployeeIdDate(newHour.getEmployee().getId(), searchDate));
 
         assertThat(result.isPresent()).isTrue();
@@ -91,8 +90,8 @@ class HourRepositoryTest {
     @DisplayName("Should get Hours of Employee by id and date from DB")
     void findByEmployeeIdDate_NotFound() {
         String id = "1231231";
-        Date date = new Date();
-        var searchDate = Utils.formatDate(date, "YYYY-MM-dd");
+        java.util.Date date = new java.util.Date();
+        var searchDate = Date.formatDate(date, "YYYY-MM-dd");
         Optional<List<Hour>> result = Optional.ofNullable(hourRepository.findByEmployeeIdDate(id, searchDate));
 
         assertThat(result.isPresent()).isTrue();
@@ -157,7 +156,7 @@ class HourRepositoryTest {
     }
 
     private Employee CreateEmployee() {
-        Date date = new Date();
+        java.util.Date date = new java.util.Date();
         EmployeeRequestDTO employeeRequestDTO = new EmployeeRequestDTO(null, "Fulano", date, 'M', 'A',  "123", "123");
         var employee = createEmployee(employeeRequestDTO);
         return employee;
