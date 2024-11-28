@@ -100,7 +100,7 @@ public class HourService implements IServiceHour<HourRequestDTO, HourResponseDTO
     }
 
     public HourResponseDTO post(HourRequestDTO data){
-        String date = Utils.formatDate(data.getDate());
+        String date = Utils.formatDate(data.getDate(), "YYYY-MM-dd");
         VerifyExistsEmployeeInDate(data, date);
         Optional<Employee> employee = getEmployeeFindById(data);
         Optional<TypeDate> typeDate = getTypeDateFindById(data);

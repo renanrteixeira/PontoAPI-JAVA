@@ -16,8 +16,8 @@ public class Utils {
         return simpleDateFormat.format(hora);
     }
 
-    public static String formatDate(Date date){
-        String pattern = "YYYY-MM-dd";
+    public static String formatDate(Date date, String pattern){
+//        String pattern = "YYYY-MM-dd";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
         return simpleDateFormat.format(date);

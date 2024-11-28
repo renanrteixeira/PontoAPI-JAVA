@@ -67,7 +67,7 @@ class HourRepositoryTest {
                 localTime, localTime);
 
         var newHour = this.createHour(data);
-        var searchDate = Utils.formatDate(newHour.getDate());
+        var searchDate = Utils.formatDate(newHour.getDate(), "YYYY-MM-dd");
         Optional<List<Hour>> result = Optional.ofNullable(hourRepository.findByEmployeeIdDate(newHour.getEmployee().getId(), searchDate));
 
         assertThat(result.isPresent()).isTrue();
@@ -78,7 +78,7 @@ class HourRepositoryTest {
     void findByEmployeeIdDate_NotFound() {
         String id = "1231231";
         Date date = new Date();
-        var searchDate = Utils.formatDate(date);
+        var searchDate = Utils.formatDate(date, "YYYY-MM-dd");
         Optional<List<Hour>> result = Optional.ofNullable(hourRepository.findByEmployeeIdDate(id, searchDate));
 
         assertThat(result.isPresent()).isTrue();
