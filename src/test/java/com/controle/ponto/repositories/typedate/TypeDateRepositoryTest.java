@@ -2,7 +2,6 @@ package com.controle.ponto.repositories.typedate;
 
 import com.controle.ponto.domain.dto.typedate.TypeDateRequestDTO;
 import com.controle.ponto.domain.typedate.TypeDate;
-import io.jsonwebtoken.lang.Assert;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.time.LocalTime;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @ActiveProfiles("test")

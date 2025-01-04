@@ -3,6 +3,8 @@ package com.controle.ponto.contollers.typedate;
 import com.controle.ponto.domain.dto.typedate.TypeDateRequestDTO;
 import com.controle.ponto.interfaces.controllers.IContoller;
 import com.controle.ponto.services.typedate.TypeDateService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,8 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/typedate")
+@SecurityRequirement(name = "Bearer Authentication")
+@Tag(name = "Type dates")
 public class TypeDateController implements IContoller<TypeDateRequestDTO> {
 
     @Autowired

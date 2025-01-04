@@ -1,6 +1,5 @@
 package com.controle.ponto.domain.dto.employee;
 
-import com.controle.ponto.domain.employee.Employee;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

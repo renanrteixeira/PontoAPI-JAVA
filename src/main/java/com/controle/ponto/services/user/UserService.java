@@ -6,7 +6,6 @@ import com.controle.ponto.exceptions.BadRequestCustomException;
 import com.controle.ponto.exceptions.user.UserNotFoundException;
 import com.controle.ponto.interfaces.services.IService;
 import com.controle.ponto.repositories.user.UserRepository;
-import com.controle.ponto.utils.Date;
 import com.controle.ponto.utils.Password;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;

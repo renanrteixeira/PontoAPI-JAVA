@@ -3,6 +3,8 @@ package com.controle.ponto.contollers.employee;
 import com.controle.ponto.domain.dto.employee.EmployeeRequestDTO;
 import com.controle.ponto.interfaces.controllers.IContoller;
 import com.controle.ponto.services.employee.EmployeeService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,8 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/employee")
+@SecurityRequirement(name = "Bearer Authentication")
+@Tag(name = "Emploies")
 public class EmployeeController implements IContoller<EmployeeRequestDTO> {
 
     @Autowired

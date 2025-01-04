@@ -1,54 +1,75 @@
 package com.controle.ponto.services.token;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.controle.ponto.config.HashPassword;
 import com.controle.ponto.domain.dto.token.TokenRequestDTO;
 import com.controle.ponto.domain.user.User;
 import com.controle.ponto.domain.user.UserAuthenticated;
+import com.controle.ponto.exceptions.user.UserNotFoundException;
 import com.controle.ponto.repositories.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+
 @Service
-public class TokenService implements UserDetailsService {
+public class TokenService {
+
+    @Value("${api.security.token.secret}")
+    private String secret;
 
     @Autowired
     private UserRepository repository;
-    @Autowired
-    private JwtService jwtService;
 
-    public String getToken(TokenRequestDTO data){
-        User user = repository.findByUsername(data.username());
+    public String generateToken(UserAuthenticated user){
+        try{
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            String token = JWT.create()
+                    .withIssuer("auth-api")
+                    .withSubject(user.getUsername())
+                    .withExpiresAt(genExpirationDate())
+                    .sign(algorithm);
+            return token;
+        } catch (JWTCreationException exception) {
+            throw new RuntimeException("Error while generating token", exception);
+        }
+    }
+
+    public String validateToken(String token){
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            return JWT.require(algorithm)
+                    .withIssuer("auth-api")
+                    .build()
+                    .verify(token)
+                    .getSubject();
+        } catch (JWTVerificationException exception){
+            return "";
+        }
+    }
+
+    public UserAuthenticated getUser(TokenRequestDTO data){
+        var user = repository.findByUsername(data.username());
         if (user == null){
-            return null;
+            throw new UserNotFoundException();
         }
 
         HashPassword hash = new HashPassword();
         boolean isValid = hash.IsValidPassword(data.password(), user.getPassword());
         if (!isValid){
-            return null;
+            throw new UserNotFoundException();
         }
 
-        UserAuthenticated userAuthenticated = new UserAuthenticated(user);
-
-        return jwtService.generateToken(userAuthenticated);
+        return new UserAuthenticated(user);
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = repository.findByUsername(username);
-        if (user == null){
-            throw new UsernameNotFoundException("Usuário não encontrado!");
-        }
-
-//        HashPassword hash = new HashPassword();
-//        boolean isValid = hash.IsValidPassword(data.password(), user.getPassword());
-//        if (!isValid){
-//            return null;
-//        }
-
-        return (UserDetails) user;
+    private Instant genExpirationDate(){
+        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
     }
 }

@@ -1,6 +1,5 @@
 package com.controle.ponto.interfaces.services;
 
-import com.controle.ponto.domain.dto.hour.HourResponseDTO;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;

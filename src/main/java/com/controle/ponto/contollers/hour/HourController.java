@@ -3,6 +3,8 @@ package com.controle.ponto.contollers.hour;
 import com.controle.ponto.domain.dto.hour.HourRequestDTO;
 import com.controle.ponto.interfaces.controllers.IControllerHour;
 import com.controle.ponto.services.hour.HourService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,8 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/hour")
+@SecurityRequirement(name = "Bearer Authentication")
+@Tag(name = "Hours")
 public class HourController implements IControllerHour<HourRequestDTO> {
 
     @Autowired
