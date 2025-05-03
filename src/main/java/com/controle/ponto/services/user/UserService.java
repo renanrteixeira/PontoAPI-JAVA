@@ -1,6 +1,7 @@
 package com.controle.ponto.services.user;
 
 import com.controle.ponto.domain.dto.user.UserRequestDTO;
+import com.controle.ponto.domain.dto.user.UserResponseDTO;
 import com.controle.ponto.domain.user.User;
 import com.controle.ponto.exceptions.BadRequestCustomException;
 import com.controle.ponto.exceptions.user.UserNotFoundException;
@@ -11,20 +12,29 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService implements IService<UserRequestDTO, User> {
+public class UserService implements IService<UserRequestDTO, UserResponseDTO> {
 
     @Autowired
     private UserRepository repository;
 
-    public List<User> findAll(){
-        return repository.findAll();
+    public List<UserResponseDTO> findAll(){
+        List<User> users = repository.findAll();
+
+        List<UserResponseDTO> usersDTO = new ArrayList<>();
+
+        for (User user: users){
+            UserResponseDTO responseDTO = new UserResponseDTO(user);
+            usersDTO.add(responseDTO);
+        }
+        return usersDTO;
     }
 
-    public User findById(String id){
+    public UserResponseDTO findById(String id){
         Optional<User> user = repository.findById(id);
         if (!user.isPresent()){
             throw new UserNotFoundException();
@@ -32,10 +42,10 @@ public class UserService implements IService<UserRequestDTO, User> {
 
         User userfound = user.get();
 
-        return userfound;
+        return new UserResponseDTO(userfound);
     }
 
-    public User post(UserRequestDTO data){
+    public UserResponseDTO post(UserRequestDTO data){
 
         Optional<User> userFound = Optional.ofNullable(repository.findByUsername(data.getUsername()));
 
@@ -48,11 +58,11 @@ public class UserService implements IService<UserRequestDTO, User> {
         user_.setPassword(password);
         repository.save(user_);
 
-        return user_;
+        return new UserResponseDTO(user_);
     }
 
     @Transactional
-    public User put(UserRequestDTO data){
+    public UserResponseDTO put(UserRequestDTO data){
         Optional<User> user = repository.findById(data.getId());
         if (!user.isPresent()){
             throw new UserNotFoundException();
@@ -66,7 +76,7 @@ public class UserService implements IService<UserRequestDTO, User> {
         newUser.setPassword(password);
         newUser.setAdmin(data.getAdmin());
 
-        return newUser;
+        return new UserResponseDTO(newUser);
     }
 
 }

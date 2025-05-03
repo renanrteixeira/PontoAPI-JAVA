@@ -1,6 +1,7 @@
 package com.controle.ponto.contollers.user;
 
 import com.controle.ponto.domain.dto.user.UserRequestDTO;
+import com.controle.ponto.domain.dto.user.UserResponseDTO;
 import com.controle.ponto.domain.user.User;
 import com.controle.ponto.interfaces.controllers.IContoller;
 import com.controle.ponto.services.user.UserService;
@@ -38,7 +39,7 @@ public class UserController implements IContoller<UserRequestDTO> {
 
     @PostMapping
     public ResponseEntity post(@RequestBody @Valid UserRequestDTO data){
-        User user = service.post(data);
+        UserResponseDTO user = service.post(data);
         URI location = URI.create("/user/" + user.getId());
 
         return ResponseEntity.created(location).body(user);
@@ -46,7 +47,7 @@ public class UserController implements IContoller<UserRequestDTO> {
 
     @PutMapping
     public ResponseEntity put(@RequestBody @Valid UserRequestDTO data){
-        User user = service.put(data);
+        UserResponseDTO user = service.put(data);
 
         return ResponseEntity.accepted().body(user);
     }
