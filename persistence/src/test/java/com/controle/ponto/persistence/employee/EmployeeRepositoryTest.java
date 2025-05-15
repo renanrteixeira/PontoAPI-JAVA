@@ -8,23 +8,22 @@ import com.controle.ponto.domain.employee.Employee;
 import com.controle.ponto.domain.role.Role;
 import com.controle.ponto.persistence.company.CompanyRepository;
 import com.controle.ponto.persistence.role.RoleRepository;
-import com.controle.ponto.webapp.PontoApplication;
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.util.Date;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DataJpaTest
 @ActiveProfiles("test")
-@SpringBootTest(classes = PontoApplication.class)
-@Transactional
+@ContextConfiguration(classes = com.controle.ponto.persistence.config.TestJpaConfig.class)
 class EmployeeRepositoryTest {
 
     @Autowired
@@ -45,10 +44,10 @@ class EmployeeRepositoryTest {
         String name = "Fulano";
         Date date = new Date();
 
-        RoleRequestDTO roleRequestDTO = new RoleRequestDTO(null, "com/controle/ponto/persistence/role");
+        RoleRequestDTO roleRequestDTO = new RoleRequestDTO(null, "role");
         var role = this.createRole(roleRequestDTO);
 
-        CompanyRequestDTO companyRequestDTO = new CompanyRequestDTO(null, "com/controle/ponto/persistence/company", "address", "11 1111-1111");
+        CompanyRequestDTO companyRequestDTO = new CompanyRequestDTO(null, "company", "address", "11 1111-1111");
         var company = this.createCompany(companyRequestDTO);
 
         EmployeeRequestDTO data = new EmployeeRequestDTO(null, name, date, 'M', 'A',  role.getId(), company.getId());

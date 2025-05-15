@@ -3,17 +3,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.controle</groupId>
-    <version>0.0.1-SNAPSHOT</version>
     <artifactId>ponto-persistence</artifactId>
     <name>Ponto / Persistence</name>
     <packaging>jar</packaging>
-    <properties>
-        <java.version>17</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-    </properties>
+    <parent>
+        <groupId>com.controle</groupId>
+        <artifactId>ponto</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
     <dependencies>
         <!-- Dependências do submódulo -->
         <dependency>
@@ -35,7 +33,12 @@
         <dependency>
             <groupId>com.controle</groupId>
             <artifactId>ponto-domain</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.controle</groupId>
+            <artifactId>ponto-resources</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>
@@ -45,7 +48,6 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.10.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -54,26 +56,21 @@
             <version>3.3.4</version>
         </dependency>
         <dependency>
-            <groupId>com.controle</groupId>
-            <artifactId>ponto-resources</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>2.2.224</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.controle</groupId>
-            <artifactId>ponto-webapp</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>jakarta.transaction</groupId>
             <artifactId>jakarta.transaction-api</artifactId>
             <version>2.0.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>3.3.4</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

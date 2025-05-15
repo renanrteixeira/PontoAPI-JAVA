@@ -10,9 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 
 @EnableAutoConfiguration
 @EnableWebSecurity
-@SpringBootApplication(scanBasePackages = {"com.controle.ponto",
-		                                   "com.controle.ponto.repository",
-										   "com.controle.ponto.services"})
+@SpringBootApplication(scanBasePackages = {"com.controle.ponto"})
 @EnableJpaRepositories(basePackages = "com.controle.ponto.persistence")
 @EntityScan(basePackages = "com.controle.ponto.domain")
 public class PontoApplication extends SpringBootServletInitializer {

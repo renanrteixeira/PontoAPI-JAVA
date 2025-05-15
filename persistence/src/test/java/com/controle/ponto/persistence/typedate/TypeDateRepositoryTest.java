@@ -2,23 +2,22 @@ package com.controle.ponto.persistence.typedate;
 
 import com.controle.ponto.domain.dto.typedate.TypeDateRequestDTO;
 import com.controle.ponto.domain.typedate.TypeDate;
-import com.controle.ponto.webapp.PontoApplication;
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.time.LocalTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DataJpaTest
 @ActiveProfiles("test")
-@SpringBootTest(classes = PontoApplication.class)
-@Transactional
+@ContextConfiguration(classes = com.controle.ponto.persistence.config.TestJpaConfig.class)
 class TypeDateRepositoryTest {
 
     @Autowired
