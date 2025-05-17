@@ -4,7 +4,8 @@ import com.controle.ponto.domain.dto.typedate.TypeDateRequestDTO;
 import com.controle.ponto.domain.dto.typedate.TypeDateResponseDTO;
 import com.controle.ponto.domain.exceptions.BadRequestCustomException;
 import com.controle.ponto.domain.exceptions.NotFoundCustomException;
-import com.controle.ponto.domain.typedate.TypeDate;
+import com.controle.ponto.domain.mappers.typeDate.TypeDateMapper;
+import com.controle.ponto.domain.entity.typedate.TypeDate;
 import com.controle.ponto.persistence.typedate.TypeDateRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +26,8 @@ public class TypeDateBusiness {
 
         List<TypeDateResponseDTO> typeDateList = new ArrayList<>();
 
-        for (com.controle.ponto.domain.typedate.TypeDate typeDate : typeDates){
-            TypeDateResponseDTO typeDateResponseDTO = new TypeDateResponseDTO(typeDate);
+        for (TypeDate typeDate : typeDates){
+            TypeDateResponseDTO typeDateResponseDTO = TypeDateMapper.INSTANCE.toResponseDTO(typeDate);
             typeDateList.add(typeDateResponseDTO);
         }
 
@@ -37,7 +38,7 @@ public class TypeDateBusiness {
         Optional<TypeDate> typedate = getTypeDateFindById(id);
         TypeDate typeFound = typedate.get();
 
-        return new TypeDateResponseDTO(typeFound);
+        return TypeDateMapper.INSTANCE.toResponseDTO(typeFound);
     }
 
     private Optional<TypeDate> getTypeDateFindById(String id) {
@@ -53,7 +54,7 @@ public class TypeDateBusiness {
         TypeDate newTypeDate = new TypeDate(data);
         typeDateRepository.save(newTypeDate);
 
-        return new TypeDateResponseDTO(newTypeDate);
+        return TypeDateMapper.INSTANCE.toResponseDTO(newTypeDate);
     }
 
     private void VerifyTypeDateFindByName(TypeDateRequestDTO data) {
@@ -71,6 +72,6 @@ public class TypeDateBusiness {
         newTypeDate.setWeekend(data.getWeekend());
         newTypeDate.setTime(data.getTime());
 
-        return new TypeDateResponseDTO(newTypeDate);
+        return TypeDateMapper.INSTANCE.toResponseDTO(newTypeDate);
     }
 }

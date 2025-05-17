@@ -1,6 +1,6 @@
 package com.controle.ponto.webapp.config;
 
-import com.controle.ponto.domain.user.UserAuthenticated;
+import com.controle.ponto.domain.entity.user.UserAuthenticated;
 import com.controle.ponto.services.token.TokenService;
 import com.controle.ponto.services.user.UserService;
 import jakarta.servlet.FilterChain;

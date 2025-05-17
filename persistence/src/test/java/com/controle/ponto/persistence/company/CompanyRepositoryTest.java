@@ -1,6 +1,6 @@
 package com.controle.ponto.persistence.company;
 
-import com.controle.ponto.domain.company.Company;
+import com.controle.ponto.domain.entity.company.Company;
 import com.controle.ponto.domain.dto.company.CompanyRequestDTO;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;

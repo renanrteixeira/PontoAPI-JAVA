@@ -4,7 +4,8 @@ import com.controle.ponto.domain.dto.user.UserRequestDTO;
 import com.controle.ponto.domain.dto.user.UserResponseDTO;
 import com.controle.ponto.domain.exceptions.BadRequestCustomException;
 import com.controle.ponto.domain.exceptions.user.UserNotFoundException;
-import com.controle.ponto.domain.user.User;
+import com.controle.ponto.domain.mappers.user.UserMapper;
+import com.controle.ponto.domain.entity.user.User;
 import com.controle.ponto.persistence.user.UserRepository;
 import com.controle.ponto.resources.utils.Password;
 import jakarta.transaction.Transactional;
@@ -27,7 +28,7 @@ public class UserBusiness {
         List<UserResponseDTO> usersDTO = new ArrayList<>();
 
         for (User user: users){
-            UserResponseDTO responseDTO = new UserResponseDTO(user);
+            UserResponseDTO responseDTO = UserMapper.INSTANTE.toResponseDTO(user);
             usersDTO.add(responseDTO);
         }
 
@@ -48,7 +49,7 @@ public class UserBusiness {
 
         User userfound = user.get();
 
-        return new UserResponseDTO(userfound);
+        return UserMapper.INSTANTE.toResponseDTO(userfound);
     }
 
     public UserResponseDTO post(UserRequestDTO data){
@@ -59,12 +60,12 @@ public class UserBusiness {
             throw new BadRequestCustomException("Usuário já cadastrado.");
         }
 
-        User user_ = new User(data);
+        User user = UserMapper.INSTANTE.toResquestEntity(data);
         String password = Password.EncodePassword(data.getPassword());
-        user_.setPassword(password);
-        userRepository.save(user_);
+        user.setPassword(password);
+        userRepository.save(user);
 
-        return new UserResponseDTO(user_);
+        return UserMapper.INSTANTE.toResponseDTO(user);
     }
 
     @Transactional
@@ -82,6 +83,6 @@ public class UserBusiness {
         newUser.setPassword(password);
         newUser.setAdmin(data.getAdmin());
 
-        return new UserResponseDTO(newUser);
+        return UserMapper.INSTANTE.toResponseDTO(newUser);
     }
 }

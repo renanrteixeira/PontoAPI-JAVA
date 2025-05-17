@@ -1,6 +1,6 @@
 package com.controle.ponto.persistence.hour;
 
-import com.controle.ponto.domain.hour.Hour;
+import com.controle.ponto.domain.entity.hour.Hour;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

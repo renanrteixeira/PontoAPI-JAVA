@@ -2,7 +2,7 @@ package com.controle.ponto.services.token;
 
 import com.controle.ponto.business.token.TokenBusiness;
 import com.controle.ponto.domain.dto.token.TokenRequestDTO;
-import com.controle.ponto.domain.user.UserAuthenticated;
+import com.controle.ponto.domain.entity.user.UserAuthenticated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
