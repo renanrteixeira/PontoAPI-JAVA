@@ -1,6 +1,5 @@
 package com.controle.ponto.domain.dto.typedate;
 
-import com.controle.ponto.domain.typedate.TypeDate;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,10 +25,4 @@ public class TypeDateResponseDTO {
     @NotNull
     char weekend;
 
-    public TypeDateResponseDTO(TypeDate typeDate){
-        this.id = typeDate.getId();
-        this.name = typeDate.getName();
-        this.time = typeDate.getTime();
-        this.weekend = typeDate.getWeekend();
-    }
 }

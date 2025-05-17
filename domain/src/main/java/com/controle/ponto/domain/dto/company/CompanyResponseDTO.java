@@ -1,6 +1,5 @@
 package com.controle.ponto.domain.dto.company;
 
-import com.controle.ponto.domain.company.Company;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,10 +21,4 @@ public class CompanyResponseDTO {
     @NotNull
     String telephone;
 
-    public CompanyResponseDTO(Company company){
-        this.id = company.getId();
-        this.name = company.getName();
-        this.address = company.getAddress();
-        this.telephone = company.getTelephone();
-    }
 }

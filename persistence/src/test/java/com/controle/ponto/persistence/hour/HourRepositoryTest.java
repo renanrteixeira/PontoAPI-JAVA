@@ -1,15 +1,15 @@
 package com.controle.ponto.persistence.hour;
 
-import com.controle.ponto.domain.company.Company;
+import com.controle.ponto.domain.entity.company.Company;
 import com.controle.ponto.domain.dto.company.CompanyRequestDTO;
 import com.controle.ponto.domain.dto.employee.EmployeeRequestDTO;
 import com.controle.ponto.domain.dto.hour.HourRequestDTO;
 import com.controle.ponto.domain.dto.role.RoleRequestDTO;
 import com.controle.ponto.domain.dto.typedate.TypeDateRequestDTO;
-import com.controle.ponto.domain.employee.Employee;
-import com.controle.ponto.domain.hour.Hour;
-import com.controle.ponto.domain.role.Role;
-import com.controle.ponto.domain.typedate.TypeDate;
+import com.controle.ponto.domain.entity.employee.Employee;
+import com.controle.ponto.domain.entity.hour.Hour;
+import com.controle.ponto.domain.entity.role.Role;
+import com.controle.ponto.domain.entity.typedate.TypeDate;
 import com.controle.ponto.persistence.employee.EmployeeRepository;
 import com.controle.ponto.persistence.typedate.TypeDateRepository;
 import com.controle.ponto.resources.utils.Date;

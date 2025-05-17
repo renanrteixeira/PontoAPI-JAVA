@@ -1,10 +1,11 @@
 package com.controle.ponto.business.company;
 
-import com.controle.ponto.domain.company.Company;
+import com.controle.ponto.domain.entity.company.Company;
 import com.controle.ponto.domain.dto.company.CompanyRequestDTO;
 import com.controle.ponto.domain.dto.company.CompanyResponseDTO;
 import com.controle.ponto.domain.exceptions.BadRequestCustomException;
 import com.controle.ponto.domain.exceptions.NotFoundCustomException;
+import com.controle.ponto.domain.mappers.company.CompanyMapper;
 import com.controle.ponto.persistence.company.CompanyRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class CompanyBusiness {
         List<CompanyResponseDTO> companyList = new ArrayList<>();
 
         for (Company company : companies){
-            CompanyResponseDTO companyDTO = new CompanyResponseDTO(company);
+            CompanyResponseDTO companyDTO = CompanyMapper.INSTANCE.toResponseDTO(company);
             companyList.add(companyDTO);
         }
         return companyList;
@@ -41,7 +42,7 @@ public class CompanyBusiness {
 
         Company foundCompany = company.get();
 
-        return new CompanyResponseDTO(foundCompany);
+        return CompanyMapper.INSTANCE.toResponseDTO(foundCompany);
     }
 
     public CompanyResponseDTO post(CompanyRequestDTO data){
@@ -53,7 +54,7 @@ public class CompanyBusiness {
         Company newCompany = new Company(data);
         repository.save(newCompany);
 
-        return new CompanyResponseDTO(newCompany);
+        return CompanyMapper.INSTANCE.toResponseDTO(newCompany);
     }
 
     @Transactional
@@ -68,6 +69,6 @@ public class CompanyBusiness {
         foundCompany.setAddress(data.getAddress());
         foundCompany.setTelephone(data.getTelephone());
 
-        return new CompanyResponseDTO(foundCompany);
+        return CompanyMapper.INSTANCE.toResponseDTO(foundCompany);
     }
 }

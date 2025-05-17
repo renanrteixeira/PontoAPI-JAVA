@@ -1,12 +1,13 @@
 package com.controle.ponto.business.employee;
 
-import com.controle.ponto.domain.company.Company;
+import com.controle.ponto.domain.entity.company.Company;
 import com.controle.ponto.domain.dto.employee.EmployeeRequestDTO;
 import com.controle.ponto.domain.dto.employee.EmployeeResponseDTO;
-import com.controle.ponto.domain.employee.Employee;
+import com.controle.ponto.domain.entity.employee.Employee;
 import com.controle.ponto.domain.exceptions.BadRequestCustomException;
 import com.controle.ponto.domain.exceptions.NotFoundCustomException;
-import com.controle.ponto.domain.role.Role;
+import com.controle.ponto.domain.mappers.employee.EmployeeMapper;
+import com.controle.ponto.domain.entity.role.Role;
 import com.controle.ponto.persistence.company.CompanyRepository;
 import com.controle.ponto.persistence.employee.EmployeeRepository;
 import com.controle.ponto.persistence.role.RoleRepository;
@@ -40,7 +41,7 @@ public class EmployeeBusiness {
             Optional<Company> company = companyRepository.findById(employee.getCompany().getId());
             employee.setRole(role.get());
             employee.setCompany(company.get());
-            EmployeeResponseDTO empl = new EmployeeResponseDTO(employee);
+            EmployeeResponseDTO empl = EmployeeMapper.INSTANCE.toResponseDTO(employee);
             listEmployee.add(empl);
         }
 
@@ -55,7 +56,7 @@ public class EmployeeBusiness {
         foundEmployee.setRole(role.get());
         foundEmployee.setCompany(company.get());
 
-        return  new EmployeeResponseDTO(foundEmployee);
+        return EmployeeMapper.INSTANCE.toResponseDTO(foundEmployee);
 
     }
 
@@ -70,7 +71,7 @@ public class EmployeeBusiness {
 
         employeeRepository.save(newEmployee);
 
-        return new EmployeeResponseDTO(newEmployee);
+        return EmployeeMapper.INSTANCE.toResponseDTO(newEmployee);
     }
 
     private void VerifyEmployeeFindByName(EmployeeRequestDTO data) {
@@ -91,7 +92,7 @@ public class EmployeeBusiness {
         Employee newEmployee = employee.get();
         SetDadosUpdateEmployee(newEmployee, data, companyFound, roleFound);
 
-        return new EmployeeResponseDTO(newEmployee);
+        return EmployeeMapper.INSTANCE.toResponseDTO(newEmployee);
     }
 
     private Optional<Employee> getOptionalEmployeeFindById(String id) {

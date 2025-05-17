@@ -11,13 +11,14 @@
         <groupId>com.controle</groupId>
         <artifactId>ponto</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <properties>
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <spring.boot.version>3.4.5</spring.boot.version>
     </properties>
     <build>
         <plugins>
@@ -89,6 +90,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+            <version>${spring.boot.version}</version>
         </dependency>
         <dependency>
             <groupId>com.nimbusds</groupId>
@@ -108,10 +110,12 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
+            <version>${logback.version}</version>
         </dependency>
     </dependencies>
 </project>

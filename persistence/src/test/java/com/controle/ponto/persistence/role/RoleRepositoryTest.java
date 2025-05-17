@@ -1,7 +1,7 @@
 package com.controle.ponto.persistence.role;
 
 import com.controle.ponto.domain.dto.role.RoleRequestDTO;
-import com.controle.ponto.domain.role.Role;
+import com.controle.ponto.domain.entity.role.Role;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

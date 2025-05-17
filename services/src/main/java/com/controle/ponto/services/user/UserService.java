@@ -2,7 +2,7 @@ package com.controle.ponto.services.user;
 
 import com.controle.ponto.domain.dto.user.UserRequestDTO;
 import com.controle.ponto.domain.dto.user.UserResponseDTO;
-import com.controle.ponto.domain.user.User;
+import com.controle.ponto.domain.entity.user.User;
 import com.controle.ponto.interfaces.IService;
 import com.controle.ponto.business.user.UserBusiness;
 import org.springframework.beans.factory.annotation.Autowired;

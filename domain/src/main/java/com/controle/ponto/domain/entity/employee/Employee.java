@@ -1,9 +1,9 @@
-package com.controle.ponto.domain.employee;
+package com.controle.ponto.domain.entity.employee;
 
-import com.controle.ponto.domain.company.Company;
+import com.controle.ponto.domain.entity.company.Company;
 import com.controle.ponto.domain.dto.employee.EmployeeRequestDTO;
-import com.controle.ponto.domain.hour.Hour;
-import com.controle.ponto.domain.role.Role;
+import com.controle.ponto.domain.entity.hour.Hour;
+import com.controle.ponto.domain.entity.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,11 +36,11 @@ public class Employee {
 //    String companyId;
 
 //    @OneToOne
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_Id")
     Role role;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
 //    @OneToOne
     @JoinColumn(name = "company_Id")
     Company company;

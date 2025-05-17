@@ -1,7 +1,7 @@
-package com.controle.ponto.domain.company;
+package com.controle.ponto.domain.entity.company;
 
 import com.controle.ponto.domain.dto.company.CompanyRequestDTO;
-import com.controle.ponto.domain.employee.Employee;
+import com.controle.ponto.domain.entity.employee.Employee;
 import jakarta.persistence.*;
 import lombok.*;
 

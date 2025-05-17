@@ -1,7 +1,7 @@
 package com.controle.ponto.persistence.typedate;
 
 import com.controle.ponto.domain.dto.typedate.TypeDateRequestDTO;
-import com.controle.ponto.domain.typedate.TypeDate;
+import com.controle.ponto.domain.entity.typedate.TypeDate;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
