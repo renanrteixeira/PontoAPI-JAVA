@@ -1,28 +1,31 @@
 package com.controle.ponto.business.hour;
 
-import com.controle.ponto.domain.company.Company;
+import com.controle.ponto.domain.entity.company.Company;
 import com.controle.ponto.domain.dto.hour.HourRequestDTO;
 import com.controle.ponto.domain.dto.hour.HourResponseDTO;
-import com.controle.ponto.domain.employee.Employee;
+import com.controle.ponto.domain.entity.employee.Employee;
 import com.controle.ponto.domain.enumerator.TypeHour;
 import com.controle.ponto.domain.exceptions.BadRequestCustomException;
 import com.controle.ponto.domain.exceptions.NotFoundCustomException;
-import com.controle.ponto.domain.hour.Hour;
-import com.controle.ponto.domain.role.Role;
-import com.controle.ponto.domain.typedate.TypeDate;
+import com.controle.ponto.domain.entity.hour.Hour;
+import com.controle.ponto.domain.mappers.hour.HourMapper;
+import com.controle.ponto.domain.entity.role.Role;
+import com.controle.ponto.domain.entity.typedate.TypeDate;
 import com.controle.ponto.persistence.company.CompanyRepository;
 import com.controle.ponto.persistence.employee.EmployeeRepository;
 import com.controle.ponto.persistence.hour.HourRepository;
 import com.controle.ponto.persistence.role.RoleRepository;
 import com.controle.ponto.persistence.typedate.TypeDateRepository;
 import com.controle.ponto.resources.utils.Date;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.flywaydb.core.internal.util.CollectionsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,7 +54,7 @@ public class HourBusiness {
 
         for (Hour hour : hours){
             SetHour(hour);
-            HourResponseDTO newHour = new HourResponseDTO(hour);
+            HourResponseDTO newHour = HourMapper.INSTANCE.toResponseDTO(hour);
             hourList.add(newHour);
         }
 
@@ -59,22 +62,21 @@ public class HourBusiness {
     }
 
     public HourResponseDTO findById(String id){
-        Optional<Hour> hour = getHourFindById(id);
-        Hour hourFound = hour.get();
-        SetHour(hourFound);
-        return new HourResponseDTO(hourFound);
+        Hour hour = getHourFindById(id);
+        SetHour(hour);
+        return HourMapper.INSTANCE.toResponseDTO(hour);
     }
 
-    private void SetHour(Hour hourFound) {
-        Optional<Employee> employee = employeeRepository.findById(hourFound.getEmployee().getId());
-        Optional<TypeDate> typeDate = typeDateRepository.findById(hourFound.getTypeDate().getId());
+    private void SetHour(Hour target) {
+        Optional<Employee> employee = employeeRepository.findById(target.getEmployee().getId());
+        Optional<TypeDate> typeDate = typeDateRepository.findById(target.getTypeDate().getId());
         Employee newEmployee = employee.get();
         Optional<Role> role = roleRepository.findById(newEmployee.getRole().getId());
         Optional<Company> company = companyRepository.findById(newEmployee.getCompany().getId());
         newEmployee.setRole(role.get());
         newEmployee.setCompany(company.get());
-        hourFound.setEmployee(newEmployee);
-        hourFound.setTypeDate(typeDate.get());
+        target.setEmployee(newEmployee);
+        target.setTypeDate(typeDate.get());
     }
 
     public List<HourResponseDTO> findByEmployee(String id){
@@ -84,46 +86,44 @@ public class HourBusiness {
 
         for (Hour hour : hours){
             SetHour(hour);
-            HourResponseDTO newHour = new HourResponseDTO(hour);
+            HourResponseDTO newHour = HourMapper.INSTANCE.toResponseDTO(hour);
             hourList.add(newHour);
         }
 
         return hourList;
     }
 
-    private Optional<Hour> getHourFindById(String id) {
-        Optional<Hour> hour = hourRepository.findById(id);
-        if (!hour.isPresent()){
-            throw new NotFoundCustomException("Hora não encontrada!");
-        }
+    private Hour getHourFindById(String id) {
+        Hour hour = hourRepository.findById(id)
+                .orElseThrow(() -> new NotFoundCustomException("Hora não encontrada!"));
+
         return hour;
     }
 
     public HourResponseDTO post(HourRequestDTO data){
         String date = Date.formatDate(data.getDate(), "YYYY-MM-dd");
         VerifyExistsEmployeeInDate(data, date);
-        Optional<Employee> employee = getEmployeeFindById(data);
-        Optional<TypeDate> typeDate = getTypeDateFindById(data);
+        Employee employee = getEmployeeFindById(data);
+        TypeDate typeDate = getTypeDateFindById(data);
 
-        Hour newHour = ProcessHour(data, typeDate.get().getTime(), employee.get(), typeDate.get());
+        Hour newHour = ProcessHour(data, typeDate.getTime(), employee, typeDate);
 
         hourRepository.save(newHour);
 
-        return new HourResponseDTO(newHour);
+        return HourMapper.INSTANCE.toResponseDTO(newHour);
     }
 
     private void VerifyExistsEmployeeInDate(HourRequestDTO data, String date) {
-        Optional<List<Hour>> hour = Optional.ofNullable(hourRepository.findByEmployeeIdDate(data.getEmployeeId(), date));
-        if (!hour.get().isEmpty()) {
+        List<Hour> hours = hourRepository.findByEmployeeIdDate(data.getEmployeeId(), date);
+        if (hours != null && !hours.isEmpty()) {
             throw new BadRequestCustomException("Hora já inserida!");
         }
     }
 
-    private Optional<Employee> getEmployeeFindById(HourRequestDTO data) {
-        Optional<Employee> employee = employeeRepository.findById(data.getEmployeeId());
-        if (!employee.isPresent()){
-            throw new NotFoundCustomException("Funcionário não encontrado!");
-        }
+    private Employee getEmployeeFindById(HourRequestDTO data) {
+        Employee employee = employeeRepository.findById(data.getEmployeeId())
+                .orElseThrow(() -> new NotFoundCustomException("Funcionário não encontrado!"));
+
         return employee;
     }
 
@@ -133,6 +133,7 @@ public class HourBusiness {
 
     private LocalTime calcularSomaDia(LocalTime morning, LocalTime afternoon, LocalTime overtime){
         var result = morning.plusHours(afternoon.getHour()).plusMinutes(afternoon.getMinute());
+
         return result.plusHours(overtime.getHour()).plusMinutes(overtime.getMinute());
     }
 
@@ -143,57 +144,69 @@ public class HourBusiness {
 
         var totalDay = calcularSomaDia(durationMorning, durationAfternoon, durationOvertime);
         var result = calcularIntervaloPeriodo(totalDay, timeDay);
-        var typeHour = TypeHour.Minus.getType();
-        if (totalDay.isAfter(timeDay)){
-            LocalTime hour = LocalTime.of(23,59);
-            result = calcularIntervaloPeriodo(result, hour);
-            result = result.plusMinutes(1);
-            typeHour = TypeHour.Plus.getType();
+
+        var workedMoreThenExpetected = totalDay.isAfter(timeDay);
+        var isZeroDeviation = result.equals(LocalTime.of(0, 0));
+
+        var typeHour = getTypeHour(isZeroDeviation, workedMoreThenExpetected);
+
+        if (workedMoreThenExpetected){
+            LocalTime fullDay = LocalTime.of(23,59);
+            result = calcularIntervaloPeriodo(result, fullDay).plusMinutes(1);
         }
 
         Hour returnHour = new Hour(data, employee, typeDate, result);
         returnHour.setIsNegative(typeHour);
+
         return returnHour;
     }
 
-    private Optional<TypeDate> getTypeDateFindById(HourRequestDTO data) {
-        Optional<TypeDate> typeDate = typeDateRepository.findById(data.getTypeDateId());
-        if (!typeDate.isPresent()){
-            throw new NotFoundCustomException("Tipo de hora não encontrada!");
+    private static int getTypeHour(boolean isZeroDeviation, boolean workedMoreThenExpetected) {
+        var typeHour = TypeHour.Minus.getType();
+        if (isZeroDeviation || workedMoreThenExpetected){
+            typeHour = TypeHour.Plus.getType();
         }
+
+        return typeHour;
+    }
+
+    private TypeDate getTypeDateFindById(HourRequestDTO data) {
+        TypeDate typeDate = typeDateRepository.findById(data.getTypeDateId())
+                .orElseThrow(() -> new NotFoundCustomException("Tipo de data não encontrada!"));
+
         return typeDate;
+    }
+
+    private void updateHour(Hour target, Hour source) {
+        target.setEmployee(source.getEmployee());
+        target.setDate(source.getDate());
+        target.setIsNegative(source.getIsNegative());
+        target.setTypeDate(source.getTypeDate());
+        target.setEnterMorning(source.getEnterMorning());
+        target.setExitMorning(source.getExitMorning());
+        target.setEnterAfternoon(source.getEnterAfternoon());
+        target.setExitAfternoon(source.getExitAfternoon());
+        target.setEnterOvertime(source.getEnterOvertime());
+        target.setExitOvertime(source.getExitOvertime());
+        target.setBalance(source.getBalance());
     }
 
     @Transactional
     public HourResponseDTO put(HourRequestDTO data){
-        Optional<Hour> hourFound = getHourFindById(data.getId());
-        Optional<Employee> employee = getEmployeeFindById(data);
-        Optional<TypeDate> typeDate = getTypeDateFindById(data);
+        Hour hourFound = getHourFindById(data.getId());
+        Employee employee = getEmployeeFindById(data);
+        TypeDate typeDate = getTypeDateFindById(data);
 
-        Hour newHour = hourFound.get();
+        Hour processHour = ProcessHour(data, typeDate.getTime(), employee, typeDate);
 
-        Hour processHour = ProcessHour(data, typeDate.get().getTime(), employee.get(), typeDate.get());
+        updateHour(hourFound, processHour);
 
-        newHour.setEmployee(processHour.getEmployee());
-        newHour.setDate(processHour.getDate());
-        newHour.setIsNegative(processHour.getIsNegative());
-        newHour.setTypeDate(processHour.getTypeDate());
-        newHour.setEnterMorning(processHour.getEnterMorning());
-        newHour.setExitMorning(processHour.getExitMorning());
-        newHour.setEnterAfternoon(processHour.getEnterAfternoon());
-        newHour.setExitAfternoon(processHour.getExitAfternoon());
-        newHour.setEnterOvertime(processHour.getEnterOvertime());
-        newHour.setExitOvertime(processHour.getExitOvertime());
-        newHour.setBalance(processHour.getBalance());
-
-        return new HourResponseDTO(newHour);
+        return HourMapper.INSTANCE.toResponseDTO(hourFound);
     }
 
     public void delete(String id){
-        Optional<Hour> hourFound = getHourFindById(id);
+        Hour hour = getHourFindById(id);
 
-        Hour newHour = hourFound.get();
-
-        hourRepository.delete(newHour);
+        hourRepository.delete(hour);
     }
 }

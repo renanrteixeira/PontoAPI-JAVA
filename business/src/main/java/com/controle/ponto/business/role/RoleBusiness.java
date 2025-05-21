@@ -4,7 +4,8 @@ import com.controle.ponto.domain.dto.role.RoleRequestDTO;
 import com.controle.ponto.domain.dto.role.RoleResponseDTO;
 import com.controle.ponto.domain.exceptions.BadRequestCustomException;
 import com.controle.ponto.domain.exceptions.NotFoundCustomException;
-import com.controle.ponto.domain.role.Role;
+import com.controle.ponto.domain.mappers.role.RoleMapper;
+import com.controle.ponto.domain.entity.role.Role;
 import com.controle.ponto.persistence.role.RoleRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class RoleBusiness {
         List<RoleResponseDTO> roleList = new ArrayList<>();
 
         for (Role role : roles){
-            RoleResponseDTO newRoleDTO = new RoleResponseDTO(role);
+            RoleResponseDTO newRoleDTO = RoleMapper.INSTANCE.toResponseDTO(role);
             roleList.add(newRoleDTO);
         }
 
@@ -37,7 +38,7 @@ public class RoleBusiness {
         Optional<Role> role = getRoleFindById(id);
         Role rolefound = role.get();
 
-        return new RoleResponseDTO(rolefound);
+        return RoleMapper.INSTANCE.toResponseDTO(rolefound);
     }
 
     private Optional<Role> getRoleFindById(String id) {
@@ -57,7 +58,7 @@ public class RoleBusiness {
         Role newRole = new Role(data);
         repository.save(newRole);
 
-        return new RoleResponseDTO(newRole);
+        return RoleMapper.INSTANCE.toResponseDTO(newRole);
     }
 
     @Transactional
@@ -67,7 +68,7 @@ public class RoleBusiness {
         Role newRole = roleFound.get();
         newRole.setName(data.getName());
 
-        return new RoleResponseDTO(newRole);
+        return RoleMapper.INSTANCE.toResponseDTO(newRole);
     }
 
 }

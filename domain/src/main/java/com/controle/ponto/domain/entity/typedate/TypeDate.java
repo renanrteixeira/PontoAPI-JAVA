@@ -1,7 +1,7 @@
-package com.controle.ponto.domain.typedate;
+package com.controle.ponto.domain.entity.typedate;
 
 import com.controle.ponto.domain.dto.typedate.TypeDateRequestDTO;
-import com.controle.ponto.domain.hour.Hour;
+import com.controle.ponto.domain.entity.hour.Hour;
 import jakarta.persistence.*;
 import lombok.*;
 

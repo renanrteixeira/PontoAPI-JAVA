@@ -1,7 +1,8 @@
 package com.controle.ponto.persistence.user;
 
 import com.controle.ponto.domain.dto.user.UserRequestDTO;
-import com.controle.ponto.domain.user.User;
+import com.controle.ponto.domain.mappers.user.UserMapper;
+import com.controle.ponto.domain.entity.user.User;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,7 +48,7 @@ class UserRepositoryTest {
     }
 
     private User createUser(UserRequestDTO user){
-        User newUser = new User(user);
+        User newUser = UserMapper.INSTANTE.toResquestEntity(user);
         this.entityManager.persist(newUser);
 
         return newUser;

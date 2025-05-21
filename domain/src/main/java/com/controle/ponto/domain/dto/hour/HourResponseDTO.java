@@ -2,7 +2,6 @@ package com.controle.ponto.domain.dto.hour;
 
 import com.controle.ponto.domain.dto.employee.EmployeeResponseDTO;
 import com.controle.ponto.domain.dto.typedate.TypeDateResponseDTO;
-import com.controle.ponto.domain.hour.Hour;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -53,20 +52,4 @@ public class HourResponseDTO {
     @NotNull
     LocalTime balance;
 
-    public HourResponseDTO(Hour hour){
-        this.id = hour.getId();
-        this.date = hour.getDate();
-        EmployeeResponseDTO employeeResponseDTO = new EmployeeResponseDTO(hour.getEmployee());
-        this.setEmployee(employeeResponseDTO);
-        TypeDateResponseDTO typeDateResponseDTO = new TypeDateResponseDTO(hour.getTypeDate());
-        this.setTypeDate(typeDateResponseDTO);
-        this.isNegative = hour.getIsNegative();
-        this.enterMorning = hour.getEnterMorning();
-        this.exitMorning = hour.getExitMorning();
-        this.enterAfternoon = hour.getEnterAfternoon();
-        this.exitAfternoon = hour.getExitAfternoon();
-        this.enterOvertime = hour.getEnterOvertime();
-        this.exitOvertime = hour.getExitOvertime();
-        this.balance = hour.getBalance();
-    }
 }

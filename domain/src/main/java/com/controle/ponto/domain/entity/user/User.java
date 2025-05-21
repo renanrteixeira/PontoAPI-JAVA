@@ -1,6 +1,5 @@
-package com.controle.ponto.domain.user;
+package com.controle.ponto.domain.entity.user;
 
-import com.controle.ponto.domain.dto.user.UserRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,14 +27,5 @@ public class User {
     private char admin;
 
     private char status;
-
-    public  User(UserRequestDTO userRequest){
-        this.name = userRequest.getName();
-        this.email = userRequest.getEmail();
-        this.username = userRequest.getUsername();
-        this.password = userRequest.getPassword();
-        this.admin = userRequest.getAdmin();
-        this.status = userRequest.getStatus();
-    }
 
 }

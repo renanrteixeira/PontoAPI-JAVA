@@ -1,7 +1,7 @@
-package com.controle.ponto.domain.role;
+package com.controle.ponto.domain.entity.role;
 
 import com.controle.ponto.domain.dto.role.RoleRequestDTO;
-import com.controle.ponto.domain.employee.Employee;
+import com.controle.ponto.domain.entity.employee.Employee;
 import jakarta.persistence.*;
 import lombok.*;
 

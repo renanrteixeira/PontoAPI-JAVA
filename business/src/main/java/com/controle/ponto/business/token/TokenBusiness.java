@@ -6,7 +6,7 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.controle.ponto.domain.dto.token.TokenRequestDTO;
 import com.controle.ponto.domain.exceptions.user.UserNotFoundException;
-import com.controle.ponto.domain.user.UserAuthenticated;
+import com.controle.ponto.domain.entity.user.UserAuthenticated;
 import com.controle.ponto.persistence.user.UserRepository;
 import com.controle.ponto.resources.config.HashPassword;
 import org.springframework.beans.factory.annotation.Autowired;

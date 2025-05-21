@@ -1,11 +1,11 @@
 package com.controle.ponto.persistence.employee;
 
-import com.controle.ponto.domain.company.Company;
+import com.controle.ponto.domain.entity.company.Company;
 import com.controle.ponto.domain.dto.company.CompanyRequestDTO;
 import com.controle.ponto.domain.dto.employee.EmployeeRequestDTO;
 import com.controle.ponto.domain.dto.role.RoleRequestDTO;
-import com.controle.ponto.domain.employee.Employee;
-import com.controle.ponto.domain.role.Role;
+import com.controle.ponto.domain.entity.employee.Employee;
+import com.controle.ponto.domain.entity.role.Role;
 import com.controle.ponto.persistence.company.CompanyRepository;
 import com.controle.ponto.persistence.role.RoleRepository;
 import jakarta.persistence.EntityManager;
