@@ -1,5 +1,5 @@
 <configuration debug="false" scan="true" scanPeriod="30 seconds">
-    <property name="LOG_FOLDER" value="E:/Docker/apache-tomcat-10.1.40/sys-logs/ponto" />
+    <property name="LOG_FOLDER" value="${java.io.tmpdir}" />
     <property name="LOG_FILE_NAME" value="ponto.log" />
     <!-- Appender para o console -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
