@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -20,25 +21,25 @@ import java.net.URI;
 public class UserController implements IContoller<UserRequestDTO> {
 
     @Autowired
-    private UserService service;
+    private UserService userService;
 
     @GetMapping()
     public ResponseEntity findAll(){
-        var users = service.findAll();
+        var users = userService.findAll();
 
         return ResponseEntity.ok(users);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity findById(@PathVariable String id){
-        var user = service.findById(id);
+        var user = userService.findById(id);
 
         return ResponseEntity.ok(user);
     }
 
     @PostMapping
     public ResponseEntity post(@RequestBody @Valid UserRequestDTO data){
-        UserResponseDTO user = service.post(data);
+        UserResponseDTO user = userService.post(data);
         URI location = URI.create("/user/" + user.getId());
 
         return ResponseEntity.created(location).body(user);
@@ -46,8 +47,17 @@ public class UserController implements IContoller<UserRequestDTO> {
 
     @PutMapping
     public ResponseEntity put(@RequestBody @Valid UserRequestDTO data){
-        UserResponseDTO user = service.put(data);
+        UserResponseDTO user = userService.put(data);
 
         return ResponseEntity.accepted().body(user);
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity patch(@RequestBody UserRequestDTO data, @PathVariable String id){
+
+        UserResponseDTO user = userService.patch(data, id);
+
+        return ResponseEntity.accepted().body(null);
+    }
+
 }

@@ -1,5 +1,7 @@
 package com.controle.ponto.business.user;
 
+import static com.controle.ponto.resources.utils.Password.EncodePassword;
+
 import com.controle.ponto.domain.dto.user.UserRequestDTO;
 import com.controle.ponto.domain.dto.user.UserResponseDTO;
 import com.controle.ponto.domain.exceptions.BadRequestCustomException;
@@ -7,20 +9,27 @@ import com.controle.ponto.domain.exceptions.user.UserNotFoundException;
 import com.controle.ponto.domain.mappers.user.UserMapper;
 import com.controle.ponto.domain.entity.user.User;
 import com.controle.ponto.persistence.user.UserRepository;
-import com.controle.ponto.resources.utils.Password;
+import com.controle.ponto.resources.utils.MapperConverter;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+
+
 
 @Component
 public class UserBusiness {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private MapperConverter<String> mapperConverter;
 
     public List<UserResponseDTO> findAll(){
         List<User> users = userRepository.findAll();
@@ -61,7 +70,7 @@ public class UserBusiness {
         }
 
         User user = UserMapper.INSTANTE.toResquestEntity(data);
-        String password = Password.EncodePassword(data.getPassword());
+        String password = EncodePassword(data.getPassword());
         user.setPassword(password);
         userRepository.save(user);
 
@@ -79,10 +88,60 @@ public class UserBusiness {
         newUser.setName(data.getName());
         newUser.setEmail(data.getEmail());
         newUser.setStatus(data.getStatus());
-        String password = Password.EncodePassword(data.getPassword());
+        String password = EncodePassword(data.getPassword());
         newUser.setPassword(password);
         newUser.setAdmin(data.getAdmin());
 
         return UserMapper.INSTANTE.toResponseDTO(newUser);
+    }
+
+    private boolean validKey(String key){
+        if (key == "id" || key == "username"){
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean validValue(Object value){
+        if (value == null){
+            return false;
+        }
+
+        if (value instanceof String && ((String) value).trim().isEmpty()){
+            return false;
+        }
+
+        return true;
+    }
+
+    public UserResponseDTO patch(UserRequestDTO data, String id){
+        User user = userRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
+
+        Map<String, Object> fields = mapperConverter.objectMap(data);
+        fields.forEach((key, value) ->{
+            try {
+                Field field = User.class.getDeclaredField(key);
+                if (!validKey(field.getName())) {
+                    return;
+                }
+
+                if (!validValue(value)){
+                    return;
+                }
+
+                if (field.getName() == "password") {
+                    value = EncodePassword(value.toString());
+                }
+                field.setAccessible(true);
+                field.set(user, value);
+            } catch (Exception e) {
+                throw new BadRequestCustomException("Erro ao atualizar campo: " + key);
+            }
+        });
+        userRepository.save(user);
+
+        return UserMapper.INSTANTE.toResponseDTO(user);
     }
 }
