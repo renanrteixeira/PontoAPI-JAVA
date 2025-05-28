@@ -36,4 +36,8 @@ public class UserService implements IService<UserRequestDTO, UserResponseDTO> {
         return userBusiness.put(data);
     }
 
+    public UserResponseDTO patch(UserRequestDTO data, String id){
+        return userBusiness.patch(data, id);
+    }
+
 }
