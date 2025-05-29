@@ -3,14 +3,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <artifactId>ponto-business</artifactId>
     <name>Ponto / Business</name>
     <packaging>jar</packaging>
     <parent>
         <groupId>com.controle</groupId>
         <artifactId>ponto</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <dependencies>
@@ -18,12 +18,12 @@
         <dependency>
             <groupId>com.controle</groupId>
             <artifactId>ponto-domain</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.controle</groupId>
             <artifactId>ponto-persistence</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>jakarta.transaction</groupId>
