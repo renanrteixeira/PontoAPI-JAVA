@@ -119,12 +119,13 @@ public class EmployeeBusiness {
         return company;
     }
 
-    private void SetDadosUpdateEmployee(Employee employee, EmployeeRequestDTO data, Company company, Role role){
-        employee.setAdmission(data.getAdmission());
-        employee.setName(data.getName());
-        employee.setCompany(company);
-        employee.setGender(data.getGender());
-        employee.setStatus(data.getStatus());
-        employee.setRole(role);
+    private void SetDadosUpdateEmployee(Employee target, EmployeeRequestDTO source, Company company, Role role){
+        target.setAdmission(source.getAdmission());
+        target.setName(source.getName());
+        target.setCompany(company);
+        target.setGender(source.getGender());
+        target.setStatus(source.getStatus());
+        target.setRole(role);
     }
+
 }

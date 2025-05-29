@@ -1,2 +1,2 @@
---password = 1234567
+-- Inserção do usuário admin = 1234567
 insert into users(id, name, email, username, password, admin, status) values ('56a51048-2b12-4fdd-bd25-0d1d5803868f', 'admin', 'admin@admin.com', 'admin', '$2a$10$RprisbCpqEuNrJhkLucPreCM18Fp/bg/DIvS.wwy1tlh3S6XtNif2', 'S', 'A');

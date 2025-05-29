@@ -19,25 +19,25 @@ import java.net.URI;
 public class EmployeeController implements IContoller<EmployeeRequestDTO> {
 
     @Autowired
-    private EmployeeService service;
+    private EmployeeService employeeService;
 
     @GetMapping
     public ResponseEntity findAll(){
-        var employees = service.findAll();
+        var employees = employeeService.findAll();
 
         return ResponseEntity.ok(employees);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity findById(@PathVariable String id){
-        var employee = service.findById(id);
+        var employee = employeeService.findById(id);
 
         return ResponseEntity.ok(employee);
     }
 
     @PostMapping
     public ResponseEntity post(@RequestBody @Valid EmployeeRequestDTO data){
-        var employee = service.post(data);
+        var employee = employeeService.post(data);
         URI location = URI.create("/com/controle/ponto/persistence/employee/" + employee.getId());
 
         return ResponseEntity.created(location).body(employee);
@@ -45,8 +45,9 @@ public class EmployeeController implements IContoller<EmployeeRequestDTO> {
 
     @PutMapping
     public ResponseEntity put(@RequestBody @Valid EmployeeRequestDTO data){
-        var employee = service.put(data);
+        var employee = employeeService.put(data);
 
         return ResponseEntity.accepted().body(employee);
     }
+
 }
