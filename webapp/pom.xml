@@ -6,11 +6,11 @@
     <artifactId>ponto-webapp</artifactId>
     <packaging>war</packaging>
     <name>Ponto / WebApp</name>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <parent>
         <groupId>com.controle</groupId>
         <artifactId>ponto</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <properties>

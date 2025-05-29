@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.controle</groupId>
 	<artifactId>ponto</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>Ponto</name>
 	<description>Controle de ponto</description>
 	<packaging>pom</packaging>
