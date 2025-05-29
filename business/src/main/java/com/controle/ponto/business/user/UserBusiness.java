@@ -95,26 +95,6 @@ public class UserBusiness {
         return UserMapper.INSTANTE.toResponseDTO(newUser);
     }
 
-    private boolean validKey(String key){
-        if (key == "id" || key == "username"){
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean validValue(Object value){
-        if (value == null){
-            return false;
-        }
-
-        if (value instanceof String && ((String) value).trim().isEmpty()){
-            return false;
-        }
-
-        return true;
-    }
-
     public UserResponseDTO patch(UserRequestDTO data, String id){
         User user = userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
@@ -123,11 +103,12 @@ public class UserBusiness {
         fields.forEach((key, value) ->{
             try {
                 Field field = User.class.getDeclaredField(key);
-                if (!validKey(field.getName())) {
+                Class<?> type = field.getType();
+                if (!mapperConverter.validKey(field.getName())) {
                     return;
                 }
 
-                if (!validValue(value)){
+                if (!mapperConverter.validValue(value)){
                     return;
                 }
 
@@ -135,6 +116,11 @@ public class UserBusiness {
                     value = EncodePassword(value.toString());
                 }
                 field.setAccessible(true);
+                if (type == char.class) {
+                    char charValue = ((String) value).charAt(0);
+                    field.set(user, charValue);
+                    return;
+                }
                 field.set(user, value);
             } catch (Exception e) {
                 throw new BadRequestCustomException("Erro ao atualizar campo: " + key);
