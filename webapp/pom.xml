@@ -20,6 +20,17 @@
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>*.properties</exclude>
+                    <exclude>logback.xml</exclude>
+                    <exclude>app.key</exclude>
+                    <exclude>app.pub</exclude>
+                </excludes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
