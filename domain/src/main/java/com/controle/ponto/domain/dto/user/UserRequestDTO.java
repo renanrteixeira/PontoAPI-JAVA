@@ -1,5 +1,7 @@
 package com.controle.ponto.domain.dto.user;
 
+import com.controle.ponto.domain.entity.enums.AdminStatus;
+import com.controle.ponto.domain.entity.enums.UserStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,9 +21,9 @@ public class UserRequestDTO {
         private String username;
         @NotNull
         private String password;
-        @NotNull
-        private char admin;
-        @NotNull
-        private char status;
+
+        private AdminStatus admin;
+
+        private UserStatus status;
 
 }

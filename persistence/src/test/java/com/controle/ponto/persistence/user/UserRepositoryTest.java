@@ -1,6 +1,8 @@
 package com.controle.ponto.persistence.user;
 
 import com.controle.ponto.domain.dto.user.UserRequestDTO;
+import com.controle.ponto.domain.entity.enums.AdminStatus;
+import com.controle.ponto.domain.entity.enums.UserStatus;
 import com.controle.ponto.domain.mappers.user.UserMapper;
 import com.controle.ponto.domain.entity.user.User;
 import jakarta.persistence.EntityManager;
@@ -30,7 +32,7 @@ class UserRepositoryTest {
     @DisplayName("Should get User successfully from DB")
     void findByUsername_Found() {
         String userName = "teste";
-        UserRequestDTO data = new UserRequestDTO(null, "Teste", "teste@teste.com", userName, "1234", 'S', 'A');
+        UserRequestDTO data = new UserRequestDTO(null, "Teste", "teste@teste.com", userName, "1234", AdminStatus.YES, UserStatus.ACTIVE);
         this.createUser(data);
 
         Optional<User> result = Optional.ofNullable(this.userRepository.findByUsername(userName));

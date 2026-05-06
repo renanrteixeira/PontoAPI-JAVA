@@ -9,15 +9,14 @@ import com.controle.ponto.domain.exceptions.user.UserNotFoundException;
 import com.controle.ponto.domain.mappers.user.UserMapper;
 import com.controle.ponto.domain.entity.user.User;
 import com.controle.ponto.persistence.user.UserRepository;
-import com.controle.ponto.resources.utils.MapperConverter;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 
@@ -27,9 +26,6 @@ public class UserBusiness {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private MapperConverter<String> mapperConverter;
 
     public List<UserResponseDTO> findAll(){
         List<User> users = userRepository.findAll();
@@ -44,15 +40,19 @@ public class UserBusiness {
         return usersDTO;
     }
 
-    public User findByUsername(String login){
-        User user = userRepository.findByUsername(login);
+    public Page<UserResponseDTO> findAllPaginated(Pageable pageable){
+        Page<User> usersPage = userRepository.findAll(pageable);
+        return usersPage.map(UserMapper.INSTANTE::toResponseDTO);
+    }
 
-        return user;
+    public User findByUsername(String login){
+
+        return userRepository.findByUsername(login);
     }
 
     public UserResponseDTO findById(String id){
         Optional<User> user = userRepository.findById(id);
-        if (!user.isPresent()){
+        if (user.isEmpty()){
             throw new UserNotFoundException();
         }
 
@@ -80,7 +80,7 @@ public class UserBusiness {
     @Transactional
     public UserResponseDTO put(UserRequestDTO data){
         Optional<User> user = userRepository.findById(data.getId());
-        if (!user.isPresent()){
+        if (user.isEmpty()){
             throw new UserNotFoundException();
         }
 
@@ -99,33 +99,22 @@ public class UserBusiness {
         User user = userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
 
-        Map<String, Object> fields = mapperConverter.objectMap(data);
-        fields.forEach((key, value) ->{
-            try {
-                Field field = User.class.getDeclaredField(key);
-                Class<?> type = field.getType();
-                if (!mapperConverter.validKey(field.getName())) {
-                    return;
-                }
+        if (data.getName() != null) {
+            user.setName(data.getName());
+        }
+        if (data.getEmail() != null) {
+            user.setEmail(data.getEmail());
+        }
+        if (data.getPassword() != null) {
+            user.setPassword(EncodePassword(data.getPassword()));
+        }
+        if (data.getAdmin() != null) {  // Assuming null means not provided for patch
+            user.setAdmin(data.getAdmin());
+        }
+        if (data.getStatus() != null) {
+            user.setStatus(data.getStatus());
+        }
 
-                if (!mapperConverter.validValue(value)){
-                    return;
-                }
-
-                if (field.getName() == "password") {
-                    value = EncodePassword(value.toString());
-                }
-                field.setAccessible(true);
-                if (type == char.class) {
-                    char charValue = ((String) value).charAt(0);
-                    field.set(user, charValue);
-                    return;
-                }
-                field.set(user, value);
-            } catch (Exception e) {
-                throw new BadRequestCustomException("Erro ao atualizar campo: " + key);
-            }
-        });
         userRepository.save(user);
 
         return UserMapper.INSTANTE.toResponseDTO(user);

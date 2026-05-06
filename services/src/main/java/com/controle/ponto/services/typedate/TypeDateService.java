@@ -2,7 +2,7 @@ package com.controle.ponto.services.typedate;
 
 import com.controle.ponto.domain.dto.typedate.TypeDateRequestDTO;
 import com.controle.ponto.domain.dto.typedate.TypeDateResponseDTO;
-import com.controle.ponto.interfaces.IService;
+import com.controle.ponto.interfaces.ICrudService;
 import com.controle.ponto.business.typedate.TypeDateBusiness;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class TypeDateService implements IService<TypeDateRequestDTO, TypeDateResponseDTO> {
+public class TypeDateService implements ICrudService<TypeDateRequestDTO, TypeDateResponseDTO> {
 
     @Autowired
     private TypeDateBusiness typeDateBusiness;

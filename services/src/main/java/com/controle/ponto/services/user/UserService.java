@@ -3,21 +3,27 @@ package com.controle.ponto.services.user;
 import com.controle.ponto.domain.dto.user.UserRequestDTO;
 import com.controle.ponto.domain.dto.user.UserResponseDTO;
 import com.controle.ponto.domain.entity.user.User;
-import com.controle.ponto.interfaces.IService;
+import com.controle.ponto.interfaces.ICrudService;
 import com.controle.ponto.business.user.UserBusiness;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class UserService implements IService<UserRequestDTO, UserResponseDTO> {
+public class UserService implements ICrudService<UserRequestDTO, UserResponseDTO> {
 
     @Autowired
     private UserBusiness userBusiness;
 
     public List<UserResponseDTO> findAll(){
         return userBusiness.findAll();
+    }
+
+    public Page<UserResponseDTO> findAllPaginated(Pageable pageable){
+        return userBusiness.findAllPaginated(pageable);
     }
 
     public User findByUsername(String login){

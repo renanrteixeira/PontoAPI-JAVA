@@ -3,14 +3,14 @@ package com.controle.ponto.services.role;
 import com.controle.ponto.business.role.RoleBusiness;
 import com.controle.ponto.domain.dto.role.RoleRequestDTO;
 import com.controle.ponto.domain.dto.role.RoleResponseDTO;
-import com.controle.ponto.interfaces.IService;
+import com.controle.ponto.interfaces.ICrudService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class RoleService implements IService<RoleRequestDTO, RoleResponseDTO> {
+public class RoleService implements ICrudService<RoleRequestDTO, RoleResponseDTO> {
 
     @Autowired
     private RoleBusiness roleBusiness;

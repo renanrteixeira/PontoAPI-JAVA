@@ -2,12 +2,17 @@ package com.controle.ponto.webapp.contollers.user;
 
 import com.controle.ponto.domain.dto.user.UserRequestDTO;
 import com.controle.ponto.domain.dto.user.UserResponseDTO;
+import com.controle.ponto.domain.dto.common.PaginationResponse;
 import com.controle.ponto.webapp.interfaces.IContoller;
 import com.controle.ponto.services.user.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +33,20 @@ public class UserController implements IContoller<UserRequestDTO> {
         var users = userService.findAll();
 
         return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/paginated")
+    public ResponseEntity<PaginationResponse<UserResponseDTO>> findAllPaginated(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "ASC") Sort.Direction direction) {
+
+        Pageable pageable = PageRequest.of(page, size, direction, sort);
+        Page<UserResponseDTO> users = userService.findAllPaginated(pageable);
+        PaginationResponse<UserResponseDTO> response = new PaginationResponse<>(users);
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")

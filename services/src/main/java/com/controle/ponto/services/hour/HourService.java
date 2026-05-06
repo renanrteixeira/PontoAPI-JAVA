@@ -3,14 +3,14 @@ package com.controle.ponto.services.hour;
 import com.controle.ponto.business.hour.HourBusiness;
 import com.controle.ponto.domain.dto.hour.HourRequestDTO;
 import com.controle.ponto.domain.dto.hour.HourResponseDTO;
-import com.controle.ponto.interfaces.IServiceHour;
+import com.controle.ponto.interfaces.ICrudServiceHour;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class HourService implements IServiceHour<HourRequestDTO, HourResponseDTO> {
+public class HourService implements ICrudServiceHour<HourRequestDTO, HourResponseDTO> {
 
     @Autowired
     private HourBusiness hourBusiness;

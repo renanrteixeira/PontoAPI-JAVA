@@ -32,15 +32,11 @@ public class EmployeeBusiness {
     private CompanyRepository companyRepository;
 
     public List<EmployeeResponseDTO> findAll(){
-        var employees = employeeRepository.findAll();
+        var employees = employeeRepository.findAllWithRoleAndCompany();
 
         List<EmployeeResponseDTO> listEmployee = new ArrayList<>();
 
         for (Employee employee : employees) {
-            Optional<Role> role = roleRepository.findById(employee.getRole().getId());
-            Optional<Company> company = companyRepository.findById(employee.getCompany().getId());
-            employee.setRole(role.get());
-            employee.setCompany(company.get());
             EmployeeResponseDTO empl = EmployeeMapper.INSTANCE.toResponseDTO(employee);
             listEmployee.add(empl);
         }
@@ -48,16 +44,19 @@ public class EmployeeBusiness {
         return listEmployee;
     }
 
+    public org.springframework.data.domain.Page<EmployeeResponseDTO> findAllPaginated(org.springframework.data.domain.Pageable pageable){
+        var employeesPage = employeeRepository.findAll(pageable);
+        return employeesPage.map(EmployeeMapper.INSTANCE::toResponseDTO);
+    }
+
     public EmployeeResponseDTO findById(String id){
-        Optional<Employee> employee = getOptionalEmployeeFindById(id);
+        Optional<Employee> employee = employeeRepository.findByIdWithRoleAndCompany(id);
+        if (employee.isEmpty()){
+            throw new BadRequestCustomException("Funcionário não cadastrado!");
+        }
         Employee foundEmployee = employee.get();
-        Optional<Role> role = roleRepository.findById(foundEmployee.getRole().getId());
-        Optional<Company> company = companyRepository.findById(foundEmployee.getCompany().getId());
-        foundEmployee.setRole(role.get());
-        foundEmployee.setCompany(company.get());
 
         return EmployeeMapper.INSTANCE.toResponseDTO(foundEmployee);
-
     }
 
     public EmployeeResponseDTO post(EmployeeRequestDTO data){
