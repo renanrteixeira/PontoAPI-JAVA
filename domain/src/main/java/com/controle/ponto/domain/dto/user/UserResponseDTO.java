@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import com.controle.ponto.domain.entity.enums.AdminStatus;
+import com.controle.ponto.domain.entity.enums.UserStatus;
+
 @AllArgsConstructor
 @Getter
 @Setter
@@ -17,8 +20,8 @@ public class UserResponseDTO {
     @NotNull
     private String email;
     @NotNull
-    private char admin;
+    private AdminStatus admin;
     @NotNull
-    private char status;
+    private UserStatus status;
 
 }

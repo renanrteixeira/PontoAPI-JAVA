@@ -20,6 +20,8 @@ import com.controle.ponto.resources.utils.Date;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.flywaydb.core.internal.util.CollectionsUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +33,8 @@ import java.util.Optional;
 
 @Component
 public class HourBusiness {
+
+    private static final Logger logger = LoggerFactory.getLogger(HourBusiness.class);
 
     @Autowired
     private HourRepository hourRepository;
@@ -48,6 +52,7 @@ public class HourBusiness {
     private CompanyRepository companyRepository;
 
     public List<HourResponseDTO> findAll(){
+        logger.info("Buscando todos os registros de horas");
         var hours = hourRepository.findAll();
 
         List<HourResponseDTO> hourList = new ArrayList<>();
@@ -58,12 +63,15 @@ public class HourBusiness {
             hourList.add(newHour);
         }
 
+        logger.info("Encontrados {} registros de horas", hourList.size());
         return hourList;
     }
 
     public HourResponseDTO findById(String id){
+        logger.info("Buscando registro de hora por ID: {}", id);
         Hour hour = getHourFindById(id);
         SetHour(hour);
+        logger.info("Registro de hora encontrado: {}", id);
         return HourMapper.INSTANCE.toResponseDTO(hour);
     }
 
@@ -80,6 +88,7 @@ public class HourBusiness {
     }
 
     public List<HourResponseDTO> findByEmployee(String id){
+        logger.info("Buscando registros de horas para funcionário: {}", id);
         var hours = hourRepository.findByEmployeeId(id);
 
         List<HourResponseDTO> hourList = new ArrayList<>();
@@ -90,17 +99,23 @@ public class HourBusiness {
             hourList.add(newHour);
         }
 
+        logger.info("Encontrados {} registros de horas para funcionário {}", hourList.size(), id);
         return hourList;
     }
 
     private Hour getHourFindById(String id) {
-        Hour hour = hourRepository.findById(id)
-                .orElseThrow(() -> new NotFoundCustomException("Hora não encontrada!"));
-
-        return hour;
+        try {
+            Hour hour = hourRepository.findById(id)
+                    .orElseThrow(() -> new NotFoundCustomException("Hora não encontrada!"));
+            return hour;
+        } catch (NotFoundCustomException e) {
+            logger.warn("Hora não encontrada: {}", id);
+            throw e;
+        }
     }
 
     public HourResponseDTO post(HourRequestDTO data){
+        logger.info("Criando novo registro de hora para funcionário {}", data.getEmployeeId());
         String date = Date.formatDate(data.getDate(), "YYYY-MM-dd");
         VerifyExistsEmployeeInDate(data, date);
         Employee employee = getEmployeeFindById(data);
@@ -109,6 +124,7 @@ public class HourBusiness {
         Hour newHour = ProcessHour(data, typeDate.getTime(), employee, typeDate);
 
         hourRepository.save(newHour);
+        logger.info("Registro de hora criado com sucesso");
 
         return HourMapper.INSTANCE.toResponseDTO(newHour);
     }
@@ -116,15 +132,20 @@ public class HourBusiness {
     private void VerifyExistsEmployeeInDate(HourRequestDTO data, String date) {
         List<Hour> hours = hourRepository.findByEmployeeIdDate(data.getEmployeeId(), date);
         if (hours != null && !hours.isEmpty()) {
+            logger.warn("Tentativa de inserir hora duplicada para funcionário {} na data {}", data.getEmployeeId(), date);
             throw new BadRequestCustomException("Hora já inserida!");
         }
     }
 
     private Employee getEmployeeFindById(HourRequestDTO data) {
-        Employee employee = employeeRepository.findById(data.getEmployeeId())
-                .orElseThrow(() -> new NotFoundCustomException("Funcionário não encontrado!"));
-
-        return employee;
+        try {
+            Employee employee = employeeRepository.findById(data.getEmployeeId())
+                    .orElseThrow(() -> new NotFoundCustomException("Funcionário não encontrado!"));
+            return employee;
+        } catch (NotFoundCustomException e) {
+            logger.warn("Funcionário não encontrado: {}", data.getEmployeeId());
+            throw e;
+        }
     }
 
     private LocalTime calcularIntervaloPeriodo(LocalTime enter, LocalTime exit){
@@ -171,10 +192,14 @@ public class HourBusiness {
     }
 
     private TypeDate getTypeDateFindById(HourRequestDTO data) {
-        TypeDate typeDate = typeDateRepository.findById(data.getTypeDateId())
-                .orElseThrow(() -> new NotFoundCustomException("Tipo de data não encontrada!"));
-
-        return typeDate;
+        try {
+            TypeDate typeDate = typeDateRepository.findById(data.getTypeDateId())
+                    .orElseThrow(() -> new NotFoundCustomException("Tipo de data não encontrada!"));
+            return typeDate;
+        } catch (NotFoundCustomException e) {
+            logger.warn("Tipo de data não encontrado: {}", data.getTypeDateId());
+            throw e;
+        }
     }
 
     private void updateHour(Hour target, Hour source) {
@@ -193,6 +218,7 @@ public class HourBusiness {
 
     @Transactional
     public HourResponseDTO put(HourRequestDTO data){
+        logger.info("Atualizando registro de hora {}", data.getId());
         Hour hourFound = getHourFindById(data.getId());
         Employee employee = getEmployeeFindById(data);
         TypeDate typeDate = getTypeDateFindById(data);
@@ -200,13 +226,16 @@ public class HourBusiness {
         Hour processHour = ProcessHour(data, typeDate.getTime(), employee, typeDate);
 
         updateHour(hourFound, processHour);
+        logger.info("Registro de hora atualizado com sucesso");
 
         return HourMapper.INSTANCE.toResponseDTO(hourFound);
     }
 
     public void delete(String id){
+        logger.info("Excluindo registro de hora {}", id);
         Hour hour = getHourFindById(id);
 
         hourRepository.delete(hour);
+        logger.info("Registro de hora excluído com sucesso");
     }
 }

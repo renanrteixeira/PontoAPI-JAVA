@@ -12,6 +12,8 @@ import com.controle.ponto.persistence.company.CompanyRepository;
 import com.controle.ponto.persistence.employee.EmployeeRepository;
 import com.controle.ponto.persistence.role.RoleRepository;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +24,8 @@ import java.util.Optional;
 @Component
 public class EmployeeBusiness {
 
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeBusiness.class);
+
     @Autowired
     private EmployeeRepository employeeRepository;
 
@@ -31,95 +35,122 @@ public class EmployeeBusiness {
     @Autowired
     private CompanyRepository companyRepository;
 
-    public List<EmployeeResponseDTO> findAll(){
-        var employees = employeeRepository.findAll();
+    public List<EmployeeResponseDTO> findAll(String companyId){
+        logger.info("Buscando todos os funcionários para empresa {}", companyId);
+        var employees = employeeRepository.findAllWithRoleAndCompanyByCompanyId(companyId);
 
         List<EmployeeResponseDTO> listEmployee = new ArrayList<>();
 
         for (Employee employee : employees) {
-            Optional<Role> role = roleRepository.findById(employee.getRole().getId());
-            Optional<Company> company = companyRepository.findById(employee.getCompany().getId());
-            employee.setRole(role.get());
-            employee.setCompany(company.get());
             EmployeeResponseDTO empl = EmployeeMapper.INSTANCE.toResponseDTO(employee);
             listEmployee.add(empl);
         }
 
+        logger.info("Encontrados {} funcionários para empresa {}", listEmployee.size(), companyId);
         return listEmployee;
     }
 
-    public EmployeeResponseDTO findById(String id){
-        Optional<Employee> employee = getOptionalEmployeeFindById(id);
-        Employee foundEmployee = employee.get();
-        Optional<Role> role = roleRepository.findById(foundEmployee.getRole().getId());
-        Optional<Company> company = companyRepository.findById(foundEmployee.getCompany().getId());
-        foundEmployee.setRole(role.get());
-        foundEmployee.setCompany(company.get());
-
-        return EmployeeMapper.INSTANCE.toResponseDTO(foundEmployee);
-
+    public org.springframework.data.domain.Page<EmployeeResponseDTO> findAllPaginated(String companyId, org.springframework.data.domain.Pageable pageable){
+        logger.info("Buscando funcionários paginados para empresa {} com paginação {}", companyId, pageable);
+        var employeesPage = employeeRepository.findAllByCompanyId(companyId, pageable);
+        var result = employeesPage.map(EmployeeMapper.INSTANCE::toResponseDTO);
+        logger.info("Retornando página com {} funcionários de {} total para empresa {}",
+                result.getNumberOfElements(), result.getTotalElements(), companyId);
+        return result;
     }
 
-    public EmployeeResponseDTO post(EmployeeRequestDTO data){
+    public EmployeeResponseDTO findById(String id, String companyId){
+        logger.info("Buscando funcionário {} para empresa {}", id, companyId);
+        Optional<Employee> employee = employeeRepository.findByIdWithRoleAndCompanyByCompanyId(id, companyId);
+        if (employee.isEmpty()){
+            logger.warn("Funcionário {} não encontrado ou não pertence à empresa {}", id, companyId);
+            throw new BadRequestCustomException("Funcionário não cadastrado ou não pertence à empresa!");
+        }
+        Employee foundEmployee = employee.get();
+        logger.info("Funcionário {} encontrado para empresa {}", id, companyId);
+
+        return EmployeeMapper.INSTANCE.toResponseDTO(foundEmployee);
+    }
+
+    public EmployeeResponseDTO post(EmployeeRequestDTO data, String companyId){
+        logger.info("Iniciando criação de funcionário {} para empresa {}", data.getName(), companyId);
         VerifyEmployeeFindByName(data);
         Optional<Role> role = getOptionalRole(data);
-        Optional<Company> company = getOptionalCompany(data);
+        Optional<Company> company = companyRepository.findById(companyId);
+        if (company.isEmpty()){
+            logger.error("Empresa {} não encontrada ao criar funcionário", companyId);
+            throw new NotFoundCustomException("Empresa não cadastrada!");
+        }
 
         Company companyFound = company.get();
         Role roleFound = role.get();
         Employee newEmployee = new Employee(data, roleFound, companyFound);
 
         employeeRepository.save(newEmployee);
+        logger.info("Funcionário {} criado com sucesso para empresa {}", newEmployee.getId(), companyId);
 
         return EmployeeMapper.INSTANCE.toResponseDTO(newEmployee);
     }
 
     private void VerifyEmployeeFindByName(EmployeeRequestDTO data) {
+        logger.debug("Verificando se funcionário com nome {} já existe", data.getName());
         Optional<Employee> employee = Optional.ofNullable(employeeRepository.findByName(data.getName()));
         if (employee.isPresent()){
+            logger.warn("Tentativa de criar funcionário com nome já existente: {}", data.getName());
             throw new BadRequestCustomException("Funcionário já cadatrado!");
         }
+        logger.debug("Nome {} disponível para novo funcionário", data.getName());
     }
 
     @Transactional
-    public EmployeeResponseDTO put(EmployeeRequestDTO data){
-        Optional<Employee> employee = getOptionalEmployeeFindById(data.getId());
+    public EmployeeResponseDTO put(EmployeeRequestDTO data, String companyId){
+        logger.info("Iniciando atualização de funcionário {} para empresa {}", data.getId(), companyId);
+        Optional<Employee> employee = employeeRepository.findByIdAndCompanyId(data.getId(), companyId);
+        if (employee.isEmpty()){
+            logger.warn("Funcionário {} não encontrado ou não pertence à empresa {} para atualização", data.getId(), companyId);
+            throw new BadRequestCustomException("Funcionário não cadastrado ou não pertence à empresa!");
+        }
         Optional<Role> role = getOptionalRole(data);
-        Optional<Company> company = getOptionalCompany(data);
+        Optional<Company> company = companyRepository.findById(companyId);
+        if (company.isEmpty()){
+            logger.error("Empresa {} não encontrada ao atualizar funcionário", companyId);
+            throw new NotFoundCustomException("Empresa não cadastrada!");
+        }
 
         Company companyFound = company.get();
         Role roleFound = role.get();
         Employee newEmployee = employee.get();
         SetDadosUpdateEmployee(newEmployee, data, companyFound, roleFound);
+        logger.info("Funcionário {} atualizado com sucesso para empresa {}", newEmployee.getId(), companyId);
 
         return EmployeeMapper.INSTANCE.toResponseDTO(newEmployee);
     }
 
-    private Optional<Employee> getOptionalEmployeeFindById(String id) {
-        Optional<Employee> employee = employeeRepository.findById(id);
-        if (!employee.isPresent()){
-            throw new BadRequestCustomException("Funcionário não cadatrado!");
-        }
-        return employee;
-    }
-
     private Optional<Role> getOptionalRole(EmployeeRequestDTO data) {
+        logger.debug("Buscando função {}", data.getRoleId());
         Optional<Role> role = roleRepository.findById(data.getRoleId());
         if (!role.isPresent()){
+            logger.error("Função {} não encontrada", data.getRoleId());
             throw new NotFoundCustomException("Função não cadastrada!");
         }
+        logger.debug("Função {} encontrada", data.getRoleId());
         return role;
     }
 
     private Optional<Company> getOptionalCompany(EmployeeRequestDTO data) {
+        logger.debug("Buscando empresa {}", data.getCompanyId());
         Optional<Company> company = companyRepository.findById(data.getCompanyId());
         if (!company.isPresent()){
+            logger.error("Empresa {} não encontrada", data.getCompanyId());
             throw new NotFoundCustomException("Empresa não cadastrada!");
         }
+        logger.debug("Empresa {} encontrada", data.getCompanyId());
         return company;
     }
 
     private void SetDadosUpdateEmployee(Employee target, EmployeeRequestDTO source, Company company, Role role){
+        logger.debug("Atualizando dados do funcionário {}: nome={}, empresa={}, função={}",
+                target.getId(), source.getName(), company.getName(), role.getName());
         target.setAdmission(source.getAdmission());
         target.setName(source.getName());
         target.setCompany(company);

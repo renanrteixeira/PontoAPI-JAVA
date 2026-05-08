@@ -1,6 +1,6 @@
 package com.controle.ponto.domain.entity.user;
 
-import com.controle.ponto.domain.enumerator.UserStatus;
+import com.controle.ponto.domain.entity.enums.UserStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -47,8 +47,6 @@ public class UserAuthenticated implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        UserStatus status = UserStatus.Ativo;
-
-        return user.getStatus() == status.getStatus();
+        return user.getStatus() == UserStatus.ACTIVE;
     }
 }

@@ -3,6 +3,11 @@ package com.controle.ponto.domain.entity.user;
 import jakarta.persistence.*;
 import lombok.*;
 
+import com.controle.ponto.domain.entity.enums.AdminStatus;
+import com.controle.ponto.domain.entity.enums.UserStatus;
+import com.controle.ponto.domain.converter.AdminStatusConverter;
+import com.controle.ponto.domain.converter.UserStatusConverter;
+
 @Table(name="users")
 @Entity(name="users")
 @EqualsAndHashCode(of = "id")
@@ -24,8 +29,9 @@ public class User {
 
     private String password;
 
-    private char admin;
+    @Convert(converter = AdminStatusConverter.class)
+    private AdminStatus admin;
 
-    private char status;
-
+    @Convert(converter = UserStatusConverter.class)
+    private UserStatus status;
 }
