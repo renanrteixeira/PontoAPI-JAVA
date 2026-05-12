@@ -61,7 +61,16 @@ public class UserController implements IContoller<UserRequestDTO> {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/username={username}")
+    public ResponseEntity findByUsername(@PathVariable String username){
+        logger.info("Buscando usuário por username {}", username);
+        var user = userService.findByUsername(username);
+        logger.info("Usuário com username {} encontrado", username);
+
+        return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/id={id}")
     public ResponseEntity findById(@PathVariable String id){
         logger.info("Buscando usuário {}", id);
         var user = userService.findById(id);

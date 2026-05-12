@@ -35,7 +35,7 @@ class UserRepositoryTest {
         UserRequestDTO data = new UserRequestDTO(null, "Teste", "teste@teste.com", userName, "1234", AdminStatus.YES, UserStatus.ACTIVE);
         this.createUser(data);
 
-        Optional<User> result = Optional.ofNullable(this.userRepository.findByUsername(userName));
+        Optional<User> result = this.userRepository.findByUsername(userName);
 
         assertThat(result.isPresent()).isTrue();
     }
@@ -44,7 +44,7 @@ class UserRepositoryTest {
     @DisplayName("Should not get User successfully from DB")
     void findByUsername_NotFound() {
         String userName = "teste";
-        Optional<User> result = Optional.ofNullable(this.userRepository.findByUsername(userName));
+        Optional<User> result = this.userRepository.findByUsername(userName);
 
         assertThat(result.isEmpty()).isTrue();
     }

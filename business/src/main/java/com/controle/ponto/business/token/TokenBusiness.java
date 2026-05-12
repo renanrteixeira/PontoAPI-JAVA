@@ -65,20 +65,20 @@ public class TokenBusiness {
     public UserAuthenticated getUser(TokenRequestDTO data){
         logger.info("Tentativa de login para usuário {}", data.username());
         var user = repository.findByUsername(data.username());
-        if (user == null){
+        if (user.isEmpty()){
             logger.warn("User not found: {}", data.username());
             throw new UserNotFoundException();
         }
 
         HashPassword hash = new HashPassword();
-        boolean isValid = hash.IsValidPassword(data.password(), user.getPassword());
+        boolean isValid = hash.IsValidPassword(data.password(), user.get().getPassword());
         if (!isValid){
             logger.warn("Invalid password for user: {}", data.username());
             throw new UserNotFoundException();
         }
 
         logger.info("Login bem-sucedido para usuário {}", data.username());
-        return new UserAuthenticated(user);
+        return new UserAuthenticated(user.get());
     }
 
     private Instant genExpirationDate(){

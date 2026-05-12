@@ -52,9 +52,19 @@ public class UserBusiness {
         return usersPage.map(UserMapper.INSTANTE::toResponseDTO);
     }
 
-    public User findByUsername(String login){
+    public UserResponseDTO findByUsername(String login){
         logger.debug("Buscando usuário por username {}", login);
-        return userRepository.findByUsername(login);
+
+        Optional<User> user = userRepository.findByUsername(login);
+        if (user.isEmpty()){
+            logger.warn("Usuário não encontrado: {}", login);
+            throw new UserNotFoundException();
+        }
+
+        User userfound = user.get();
+        logger.info("Usuário encontrado: {}", login);
+
+        return UserMapper.INSTANTE.toResponseDTO(userfound);
     }
 
     public UserResponseDTO findById(String id){
@@ -74,7 +84,7 @@ public class UserBusiness {
     public UserResponseDTO post(UserRequestDTO data){
         logger.info("Criando novo usuário {}", data.getUsername());
 
-        Optional<User> userFound = Optional.ofNullable(userRepository.findByUsername(data.getUsername()));
+        Optional<User> userFound = userRepository.findByUsername(data.getUsername());
 
         if (userFound.isPresent()){
             logger.warn("Tentativa de criar usuário duplicado: {}", data.getUsername());

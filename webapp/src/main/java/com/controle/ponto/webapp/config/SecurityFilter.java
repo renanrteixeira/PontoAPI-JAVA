@@ -1,8 +1,8 @@
 package com.controle.ponto.webapp.config;
 
 import com.controle.ponto.domain.entity.user.UserAuthenticated;
+import com.controle.ponto.persistence.user.UserRepository;
 import com.controle.ponto.services.token.TokenService;
-import com.controle.ponto.services.user.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,18 +21,19 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Autowired
     TokenService tokenService;
     @Autowired
-    UserService userService;
+    UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var token = this.recoverToken(request);
         if(token != null){
             var login = tokenService.validateToken(token);
-            var user = userService.findByUsername(login);
-            var userDetails = new UserAuthenticated(user);
-
-            var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            var user = userRepository.findByUsername(login);
+            if(user.isPresent()){
+                var userDetails = new UserAuthenticated(user.get());
+                var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
         }
         filterChain.doFilter(request, response);
     }

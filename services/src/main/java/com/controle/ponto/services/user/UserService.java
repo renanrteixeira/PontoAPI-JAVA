@@ -34,7 +34,7 @@ public class UserService implements ICrudService<UserRequestDTO, UserResponseDTO
         return userBusiness.findAllPaginated(pageable);
     }
 
-    public User findByUsername(String login){
+    public UserResponseDTO findByUsername(String login){
         logger.debug("Delegando busca de usuário por username {}", login);
         return userBusiness.findByUsername(login);
     }
