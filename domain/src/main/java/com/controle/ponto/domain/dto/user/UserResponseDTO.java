@@ -18,6 +18,8 @@ public class UserResponseDTO {
     @NotNull
     private String name;
     @NotNull
+    private String username;
+    @NotNull
     private String email;
     @NotNull
     private AdminStatus admin;
